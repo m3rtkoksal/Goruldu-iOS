@@ -36,6 +36,18 @@ final class StoryTests: XCTestCase {
         XCTAssertEqual(roast.note, "B. yazar, D. okumaz.")
     }
 
+    func testOnlyTheLastCardSharesTheWholeSet() throws {
+        let report = try Fixture.report("lise-tayfa")
+        let cards = StoryCard.cards(for: report)
+        let roasts = [Roast(name: "Burak", line: "Bir satır.")]
+        let single = ShareContent.pages(for: .talker, report: report, roasts: roasts, hideNames: false)
+        XCTAssertEqual(single.map(\.card), [.talker])
+        let all = ShareContent.pages(for: cards.last ?? .roast, report: report, roasts: roasts, hideNames: false)
+        XCTAssertEqual(all.map(\.card), cards)
+        let withoutRoast = ShareContent.pages(for: .roast, report: report, roasts: [], hideNames: false)
+        XCTAssertEqual(withoutRoast.map(\.card), cards.filter { $0 != .roast })
+    }
+
     func testShareFallsBackToTalkerWhenRoastIsMissing() throws {
         let report = try Fixture.report("lise-tayfa")
         let content = ShareContent.make(card: .roast, report: report, roasts: [], hideNames: false)

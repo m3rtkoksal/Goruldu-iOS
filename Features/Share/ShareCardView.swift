@@ -6,6 +6,8 @@ struct ShareCardView: View {
 
     let content: ShareContent
 
+    private var nameIsLong: Bool { content.name.count > 18 }
+
     var body: some View {
         let theme = StoryTheme.theme(for: content.card)
         VStack(alignment: .leading, spacing: 0) {
@@ -17,9 +19,11 @@ struct ShareCardView: View {
                 .labelStyle(18, tracking: 0.07)
                 .lineLimit(2)
             Text(verbatim: content.name)
-                .displayStyle(94, tracking: -0.05)
-                .lineLimit(content.card == .cover ? 2 : 1)
-                .minimumScaleFactor(0.25)
+                .font(nameIsLong ? .custom(Typeface.body(.bold), fixedSize: 40) : .display(94))
+                .tracking(nameIsLong ? -0.4 : -4.7)
+                .lineSpacing(nameIsLong ? 2 : 0)
+                .lineLimit(nameIsLong ? 3 : 1)
+                .minimumScaleFactor(nameIsLong ? 0.75 : 0.4)
                 .padding(.top, 10)
             if !content.stat.isEmpty {
                 Text(verbatim: content.stat)

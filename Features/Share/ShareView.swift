@@ -1,6 +1,7 @@
 import Photos
 import SwiftUI
 
+/// Exports every story card and hands them to the share sheet together.
 struct ShareView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -14,7 +15,7 @@ struct ShareView: View {
 
     private enum Export: Equatable {
         case rendering
-        case ready(URL)
+        case ready([URL])
         case failed
     }
 
@@ -26,8 +27,8 @@ struct ShareView: View {
         case failed
     }
 
-    private var content: ShareContent {
-        ShareContent.make(card: card, report: report, roasts: roasts, hideNames: hidesNames)
+    private var contents: [ShareContent] {
+        ShareContent.pages(for: card, report: report, roasts: roasts, hideNames: hidesNames)
     }
 
     var body: some View {
@@ -36,18 +37,36 @@ struct ShareView: View {
                 title: L10n.tr("story.share"),
                 leading: IconButton(symbol: Symbol.back, label: L10n.tr("common.back")) { dismiss() }
             )
-            GeometryReader { proxy in
-                let scale = min(proxy.size.height / ShareCardView.size.height, proxy.size.width / ShareCardView.size.width) * 0.9
-                ShareCardView(content: content)
-                    .clipShape(RoundedRectangle(cornerRadius: 36, style: .continuous))
-                    .scaleEffect(max(0.1, scale))
-                    .rotationEffect(.degrees(-2))
-                    .shadow(color: StoryTheme.theme(for: content.card).background.opacity(0.35), radius: 30, x: 0, y: 20)
-                    .frame(width: proxy.size.width, height: proxy.size.height)
+            if contents.count > 1 {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .top, spacing: 14) {
+                        ForEach(contents, id: \.card) { item in
+                            preview(item, scale: previewScale, corner: 16)
+                        }
+                    }
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 8)
+                }
+                .frame(maxHeight: .infinity)
+                Text(verbatim: L10n.tr("share.deck", String(contents.count)))
+                    .font(.ui(13, .semibold))
+                    .foregroundStyle(Palette.muted)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 4)
+            } else if let item = contents.first {
+                GeometryReader { proxy in
+                    let scale = min(proxy.size.height / ShareCardView.size.height, proxy.size.width / ShareCardView.size.width) * 0.9
+                    ShareCardView(content: item)
+                        .clipShape(RoundedRectangle(cornerRadius: 36, style: .continuous))
+                        .scaleEffect(max(0.1, scale))
+                        .rotationEffect(.degrees(-2))
+                        .shadow(color: StoryTheme.theme(for: item.card).background.opacity(0.35), radius: 30, x: 0, y: 20)
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text(verbatim: "\(item.label). \(item.name). \(item.stat). \(item.note)"))
+                }
+                .padding(.vertical, 12)
             }
-            .padding(.vertical, 12)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: "\(content.label). \(content.name). \(content.stat). \(content.note)"))
 
             Toggle(isOn: $hidesNames) {
                 VStack(alignment: .leading, spacing: 2) {
@@ -101,9 +120,23 @@ struct ShareView: View {
         .task(id: hidesNames) { render() }
     }
 
+    private func preview(_ item: ShareContent, scale: CGFloat, corner: CGFloat) -> some View {
+        ShareCardView(content: item)
+            .scaleEffect(scale, anchor: .top)
+            .frame(
+                width: ShareCardView.size.width * scale,
+                height: ShareCardView.size.height * scale,
+                alignment: .top
+            )
+            .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+            .clipped()
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: "\(item.label). \(item.name). \(item.stat). \(item.note)"))
+    }
+
     @ViewBuilder private var shareButton: some View {
-        if case .ready(let url) = export {
-            ShareLink(item: url) {
+        if case .ready(let urls) = export, !urls.isEmpty {
+            ShareLink(items: urls) {
                 HStack(spacing: 8) {
                     Image(systemName: Symbol.upload).font(.system(size: 16, weight: .bold))
                     Text(verbatim: L10n.tr("story.share"))
@@ -124,7 +157,7 @@ struct ShareView: View {
     }
 
     private var isReady: Bool {
-        if case .ready = export { return true }
+        if case .ready(let urls) = export { return !urls.isEmpty }
         return false
     }
 
@@ -138,28 +171,37 @@ struct ShareView: View {
         }
     }
 
-    /// Renders the card to a 1080 x 1920 PNG in the temporary folder.
+    /// Renders every card to a 1080 x 1920 PNG. The share sheet receives the whole set.
     private func render() {
         export = .rendering
         saveState = .idle
-        let renderer = ImageRenderer(content: ShareCardView(content: content))
-        renderer.scale = 3
-        renderer.proposedSize = ProposedViewSize(ShareCardView.size)
-        guard let data = renderer.uiImage?.pngData() else {
-            export = .failed
-            return
-        }
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("goruldu-\(card.rawValue)\(hidesNames ? "-gizli" : "").png")
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent("goruldu-share", isDirectory: true)
         do {
-            try data.write(to: url, options: .atomic)
-            export = .ready(url)
+            if FileManager.default.fileExists(atPath: folder.path) {
+                try FileManager.default.removeItem(at: folder)
+            }
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            var urls: [URL] = []
+            for (index, item) in contents.enumerated() {
+                let renderer = ImageRenderer(content: ShareCardView(content: item))
+                renderer.scale = 3
+                renderer.proposedSize = ProposedViewSize(ShareCardView.size)
+                guard let data = renderer.uiImage?.pngData() else {
+                    export = .failed
+                    return
+                }
+                let url = folder.appendingPathComponent(String(format: "goruldu-%02d-%@.png", index + 1, item.card.rawValue))
+                try data.write(to: url, options: .atomic)
+                urls.append(url)
+            }
+            export = urls.isEmpty ? .failed : .ready(urls)
         } catch {
             export = .failed
         }
     }
 
     private func save() {
-        guard case .ready(let url) = export else { return }
+        guard case .ready(let urls) = export, !urls.isEmpty else { return }
         saveState = .saving
         Task {
             let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
@@ -169,7 +211,9 @@ struct ShareView: View {
             }
             do {
                 try await PHPhotoLibrary.shared().performChanges {
-                    PHAssetCreationRequest.forAsset().addResource(with: .photo, fileURL: url, options: nil)
+                    for url in urls {
+                        PHAssetCreationRequest.forAsset().addResource(with: .photo, fileURL: url, options: nil)
+                    }
                 }
                 saveState = .saved
             } catch {
@@ -177,4 +221,6 @@ struct ShareView: View {
             }
         }
     }
+
+    private var previewScale: CGFloat { 0.34 }
 }

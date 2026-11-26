@@ -9,6 +9,26 @@ struct ShareContent: Equatable {
     var stat: String
     var note: String
 
+    /// The last story card shares the whole set. Every earlier card shares only itself.
+    static func pages(for card: StoryCard, report: ChatReport, roasts: [Roast], hideNames: Bool) -> [ShareContent] {
+        let shown = StoryCard.cards(for: report)
+        guard shown.last == card else {
+            return [make(card: card, report: report, roasts: roasts, hideNames: hideNames)]
+        }
+        let all = deck(report: report, roasts: roasts, hideNames: hideNames)
+        return all.isEmpty ? [make(card: card, report: report, roasts: roasts, hideNames: hideNames)] : all
+    }
+
+    /// One image per story card, in story order. The roast card is left out until its lines exist,
+    /// so a missing roast is not replaced by a second copy of the talker card.
+    static func deck(report: ChatReport, roasts: [Roast], hideNames: Bool) -> [ShareContent] {
+        StoryCard.cards(for: report).compactMap { card in
+            let content = make(card: card, report: report, roasts: roasts, hideNames: hideNames)
+            if card == .roast && content.card != .roast { return nil }
+            return content
+        }
+    }
+
     /// - Parameter hideNames: Replaces every participant name with its first letter.
     static func make(card: StoryCard, report: ChatReport, roasts: [Roast], hideNames: Bool) -> ShareContent {
         func shown(_ name: String) -> String { hideNames ? Format.masked(name) : name }

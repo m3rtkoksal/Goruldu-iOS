@@ -9,13 +9,8 @@ struct CoverCard: View {
         VStack(alignment: .leading, spacing: 0) {
             Sticker(text: L10n.tr("story.yearReport", report.year), background: theme.accent, foreground: theme.onAccent)
                 .padding(.top, 6)
-            Text(verbatim: report.title)
-                .displayStyle(compact ? 84 : 108, tracking: -0.06)
-                .lineLimit(2)
-                .minimumScaleFactor(0.3)
-                .multilineTextAlignment(.leading)
+            CoverTitle(text: report.title, compact: compact)
                 .padding(.top, 22)
-                .accessibilityAddTraits(.isHeader)
             Text(verbatim: L10n.tr("cover.lead"))
                 .font(.ui(17))
                 .lineSpacing(4)
@@ -48,5 +43,25 @@ struct CoverCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// Long WhatsApp titles stay in the text face. The poster face is only for a short name.
+struct CoverTitle: View {
+    let text: String
+    let compact: Bool
+
+    private var isLong: Bool { text.count > 18 }
+
+    var body: some View {
+        Text(verbatim: text)
+            .font(isLong ? .ui(compact ? 30 : 34, .bold) : .display(compact ? 84 : 100))
+            .tracking(isLong ? -0.4 : (compact ? -3.4 : -4))
+            .lineSpacing(isLong ? 3 : 0)
+            .lineLimit(isLong ? 3 : 2)
+            .minimumScaleFactor(isLong ? 0.8 : 0.5)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityAddTraits(.isHeader)
     }
 }
