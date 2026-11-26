@@ -1,0 +1,248 @@
+{
+  "title": "lise-tayfa",
+  "turkish": true,
+  "totalMessages": 4864,
+  "participantCount": 8,
+  "activeDays": 313,
+  "firstDate": "2026-01-03",
+  "lastDate": "2026-11-21",
+  "participants": [
+    {
+      "name": "Burak",
+      "messages": 1329,
+      "sharePercent": 27,
+      "avgReplyMinutes": 85,
+      "replyCount": 815,
+      "slowReplies": 63,
+      "nightPercent": 14,
+      "capsCount": 0,
+      "mediaCount": 19,
+      "longestSilenceDays": 2,
+      "longestMonologue": 9,
+      "planBreaks": 0,
+      "dramaCount": 40,
+      "laughCount": 0
+    },
+    {
+      "name": "Zeynep",
+      "messages": 810,
+      "sharePercent": 17,
+      "avgReplyMinutes": 85,
+      "replyCount": 675,
+      "slowReplies": 49,
+      "nightPercent": 9,
+      "capsCount": 0,
+      "mediaCount": 15,
+      "longestSilenceDays": 2,
+      "longestMonologue": 5,
+      "planBreaks": 0,
+      "dramaCount": 48,
+      "laughCount": 0
+    },
+    {
+      "name": "Can",
+      "messages": 752,
+      "sharePercent": 15,
+      "avgReplyMinutes": 107,
+      "replyCount": 521,
+      "slowReplies": 48,
+      "nightPercent": 48,
+      "capsCount": 0,
+      "mediaCount": 13,
+      "longestSilenceDays": 4,
+      "longestMonologue": 6,
+      "planBreaks": 0,
+      "dramaCount": 27,
+      "laughCount": 0
+    },
+    {
+      "name": "Selin",
+      "messages": 584,
+      "sharePercent": 12,
+      "avgReplyMinutes": 105,
+      "replyCount": 495,
+      "slowReplies": 45,
+      "nightPercent": 3,
+      "capsCount": 0,
+      "mediaCount": 152,
+      "longestSilenceDays": 3,
+      "longestMonologue": 5,
+      "planBreaks": 0,
+      "dramaCount": 20,
+      "laughCount": 0
+    },
+    {
+      "name": "Emre",
+      "messages": 580,
+      "sharePercent": 12,
+      "avgReplyMinutes": 112,
+      "replyCount": 488,
+      "slowReplies": 46,
+      "nightPercent": 3,
+      "capsCount": 77,
+      "mediaCount": 11,
+      "longestSilenceDays": 4,
+      "longestMonologue": 5,
+      "planBreaks": 0,
+      "dramaCount": 24,
+      "laughCount": 0
+    },
+    {
+      "name": "Mert",
+      "messages": 370,
+      "sharePercent": 8,
+      "avgReplyMinutes": 83,
+      "replyCount": 337,
+      "slowReplies": 26,
+      "nightPercent": 28,
+      "capsCount": 0,
+      "mediaCount": 9,
+      "longestSilenceDays": 4,
+      "longestMonologue": 3,
+      "planBreaks": 0,
+      "dramaCount": 12,
+      "laughCount": 102
+    },
+    {
+      "name": "Elif",
+      "messages": 331,
+      "sharePercent": 7,
+      "avgReplyMinutes": 73,
+      "replyCount": 298,
+      "slowReplies": 18,
+      "nightPercent": 2,
+      "capsCount": 0,
+      "mediaCount": 8,
+      "longestSilenceDays": 6,
+      "longestMonologue": 4,
+      "planBreaks": 22,
+      "dramaCount": 9,
+      "laughCount": 0
+    },
+    {
+      "name": "Deniz",
+      "messages": 108,
+      "sharePercent": 2,
+      "avgReplyMinutes": 680,
+      "replyCount": 108,
+      "slowReplies": 94,
+      "nightPercent": 17,
+      "capsCount": 0,
+      "mediaCount": 0,
+      "longestSilenceDays": 35,
+      "longestMonologue": 1,
+      "planBreaks": 0,
+      "dramaCount": 0,
+      "laughCount": 0
+    }
+  ],
+  "talker": {
+    "name": "Burak",
+    "messages": 1329,
+    "sharePercent": 27
+  },
+  "slowReplier": {
+    "name": "Deniz",
+    "avgReplyMinutes": 680,
+    "slowReplies": 94,
+    "fastestName": "Elif",
+    "fastestAvgReplyMinutes": 73
+  },
+  "nightOwl": {
+    "name": "Can",
+    "nightPercent": 48,
+    "peakHour": 2,
+    "hours": [
+      67,
+      100,
+      139,
+      58,
+      9,
+      1,
+      3,
+      1,
+      2,
+      19,
+      11,
+      3,
+      22,
+      27,
+      7,
+      6,
+      0,
+      21,
+      47,
+      53,
+      43,
+      61,
+      31,
+      21
+    ]
+  },
+  "topWords": [
+    {
+      "word": "kanka",
+      "count": 1035
+    },
+    {
+      "word": "aynen",
+      "count": 550
+    },
+    {
+      "word": "tamam",
+      "count": 543
+    },
+    {
+      "word": "geliyorum",
+      "count": 359
+    },
+    {
+      "word": "nerdesiniz",
+      "count": 322
+    }
+  ],
+  "awards": [
+    {
+      "id": "planBreaker",
+      "name": "Elif",
+      "value": 22,
+      "premium": false
+    },
+    {
+      "id": "ghost",
+      "name": "Deniz",
+      "value": 35,
+      "premium": false
+    },
+    {
+      "id": "capsLock",
+      "name": "Emre",
+      "value": 77,
+      "premium": false
+    },
+    {
+      "id": "monologue",
+      "name": "Burak",
+      "value": 9,
+      "premium": true
+    },
+    {
+      "id": "drama",
+      "name": "Zeynep",
+      "value": 48,
+      "premium": true
+    },
+    {
+      "id": "mediaSpammer",
+      "name": "Selin",
+      "value": 152,
+      "premium": true
+    },
+    {
+      "id": "laugher",
+      "name": "Mert",
+      "value": 102,
+      "premium": true
+    }
+  ]
+}

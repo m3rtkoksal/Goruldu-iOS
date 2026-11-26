@@ -1,0 +1,22 @@
+.DS_Store
+.build/
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcresult
+*.ipa
+*.dSYM.zip
+*.dSYM
+.swiftpm/
+Package.resolved
+
+# Gizli veya makineye özel ayarlar repoya girmez.
+Configuration/Local.xcconfig
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+.env
+.env.*
+GoogleService-Info.plist

@@ -1,0 +1,122 @@
+{
+  "title": "android-en-us",
+  "turkish": false,
+  "totalMessages": 25,
+  "participantCount": 2,
+  "activeDays": 5,
+  "firstDate": "2026-01-09",
+  "lastDate": "2026-02-01",
+  "participants": [
+    {
+      "name": "Alice",
+      "messages": 13,
+      "sharePercent": 52,
+      "avgReplyMinutes": 65,
+      "replyCount": 7,
+      "slowReplies": 1,
+      "nightPercent": 0,
+      "capsCount": 3,
+      "mediaCount": 0,
+      "longestSilenceDays": 19,
+      "longestMonologue": 3,
+      "planBreaks": 0,
+      "dramaCount": 2,
+      "laughCount": 1
+    },
+    {
+      "name": "Bob",
+      "messages": 12,
+      "sharePercent": 48,
+      "avgReplyMinutes": 488,
+      "replyCount": 7,
+      "slowReplies": 2,
+      "nightPercent": 25,
+      "capsCount": 0,
+      "mediaCount": 2,
+      "longestSilenceDays": 19,
+      "longestMonologue": 4,
+      "planBreaks": 1,
+      "dramaCount": 0,
+      "laughCount": 1
+    }
+  ],
+  "talker": {
+    "name": "Alice",
+    "messages": 13,
+    "sharePercent": 52
+  },
+  "slowReplier": {
+    "name": "Bob",
+    "avgReplyMinutes": 488,
+    "slowReplies": 2,
+    "fastestName": "Alice",
+    "fastestAvgReplyMinutes": 65
+  },
+  "nightOwl": {
+    "name": "Bob",
+    "nightPercent": 25,
+    "peakHour": 0,
+    "hours": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      2,
+      0,
+      0,
+      1
+    ]
+  },
+  "topWords": [
+    {
+      "word": "game",
+      "count": 3
+    },
+    {
+      "word": "saturday",
+      "count": 3
+    },
+    {
+      "word": "again",
+      "count": 2
+    },
+    {
+      "word": "friday",
+      "count": 2
+    },
+    {
+      "word": "make",
+      "count": 2
+    }
+  ],
+  "awards": [
+    {
+      "id": "ghost",
+      "name": "Alice",
+      "value": 19,
+      "premium": false
+    },
+    {
+      "id": "capsLock",
+      "name": "Alice",
+      "value": 3,
+      "premium": false
+    }
+  ]
+}

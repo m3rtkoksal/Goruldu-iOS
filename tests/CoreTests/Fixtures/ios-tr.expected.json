@@ -1,0 +1,144 @@
+{
+  "title": "ios-tr",
+  "turkish": true,
+  "totalMessages": 29,
+  "participantCount": 3,
+  "activeDays": 5,
+  "firstDate": "2026-03-02",
+  "lastDate": "2026-03-14",
+  "participants": [
+    {
+      "name": "Ayşe",
+      "messages": 12,
+      "sharePercent": 41,
+      "avgReplyMinutes": 81,
+      "replyCount": 10,
+      "slowReplies": 1,
+      "nightPercent": 17,
+      "capsCount": 0,
+      "mediaCount": 1,
+      "longestSilenceDays": 8,
+      "longestMonologue": 2,
+      "planBreaks": 0,
+      "dramaCount": 1,
+      "laughCount": 1
+    },
+    {
+      "name": "Mehmet Yılmaz",
+      "messages": 9,
+      "sharePercent": 31,
+      "avgReplyMinutes": 98,
+      "replyCount": 7,
+      "slowReplies": 1,
+      "nightPercent": 11,
+      "capsCount": 0,
+      "mediaCount": 1,
+      "longestSilenceDays": 8,
+      "longestMonologue": 2,
+      "planBreaks": 2,
+      "dramaCount": 1,
+      "laughCount": 1
+    },
+    {
+      "name": "+90 532 111 22 33",
+      "messages": 8,
+      "sharePercent": 28,
+      "avgReplyMinutes": 244,
+      "replyCount": 4,
+      "slowReplies": 0,
+      "nightPercent": 75,
+      "capsCount": 3,
+      "mediaCount": 0,
+      "longestSilenceDays": 9,
+      "longestMonologue": 4,
+      "planBreaks": 0,
+      "dramaCount": 0,
+      "laughCount": 0
+    }
+  ],
+  "talker": {
+    "name": "Ayşe",
+    "messages": 12,
+    "sharePercent": 41
+  },
+  "slowReplier": {
+    "name": "+90 532 111 22 33",
+    "avgReplyMinutes": 244,
+    "slowReplies": 0,
+    "fastestName": "Ayşe",
+    "fastestAvgReplyMinutes": 81
+  },
+  "nightOwl": {
+    "name": "+90 532 111 22 33",
+    "nightPercent": 75,
+    "peakHour": 1,
+    "hours": [
+      1,
+      4,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "topWords": [
+    {
+      "word": "pasta",
+      "count": 4
+    },
+    {
+      "word": "tamam",
+      "count": 4
+    },
+    {
+      "word": "ayırdık",
+      "count": 2
+    },
+    {
+      "word": "değilim",
+      "count": 2
+    },
+    {
+      "word": "gece",
+      "count": 2
+    }
+  ],
+  "awards": [
+    {
+      "id": "planBreaker",
+      "name": "Mehmet Yılmaz",
+      "value": 2,
+      "premium": false
+    },
+    {
+      "id": "ghost",
+      "name": "+90 532 111 22 33",
+      "value": 9,
+      "premium": false
+    },
+    {
+      "id": "capsLock",
+      "name": "+90 532 111 22 33",
+      "value": 3,
+      "premium": false
+    }
+  ]
+}

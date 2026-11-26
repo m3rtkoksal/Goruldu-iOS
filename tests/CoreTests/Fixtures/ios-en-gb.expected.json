@@ -1,0 +1,132 @@
+{
+  "title": "ios-en-gb",
+  "turkish": false,
+  "totalMessages": 22,
+  "participantCount": 3,
+  "activeDays": 5,
+  "firstDate": "2026-01-09",
+  "lastDate": "2026-02-01",
+  "participants": [
+    {
+      "name": "Priya",
+      "messages": 9,
+      "sharePercent": 41,
+      "avgReplyMinutes": 2,
+      "replyCount": 6,
+      "slowReplies": 0,
+      "nightPercent": 0,
+      "capsCount": 0,
+      "mediaCount": 2,
+      "longestSilenceDays": 19,
+      "longestMonologue": 2,
+      "planBreaks": 0,
+      "dramaCount": 0,
+      "laughCount": 0
+    },
+    {
+      "name": "Tom",
+      "messages": 7,
+      "sharePercent": 32,
+      "avgReplyMinutes": 543,
+      "replyCount": 6,
+      "slowReplies": 2,
+      "nightPercent": 29,
+      "capsCount": 0,
+      "mediaCount": 0,
+      "longestSilenceDays": 19,
+      "longestMonologue": 2,
+      "planBreaks": 1,
+      "dramaCount": 0,
+      "laughCount": 0
+    },
+    {
+      "name": "Hannah",
+      "messages": 6,
+      "sharePercent": 27,
+      "avgReplyMinutes": 222,
+      "replyCount": 5,
+      "slowReplies": 1,
+      "nightPercent": 0,
+      "capsCount": 0,
+      "mediaCount": 0,
+      "longestSilenceDays": 19,
+      "longestMonologue": 2,
+      "planBreaks": 0,
+      "dramaCount": 1,
+      "laughCount": 0
+    }
+  ],
+  "talker": {
+    "name": "Priya",
+    "messages": 9,
+    "sharePercent": 41
+  },
+  "slowReplier": {
+    "name": "Tom",
+    "avgReplyMinutes": 543,
+    "slowReplies": 2,
+    "fastestName": "Priya",
+    "fastestAvgReplyMinutes": 2
+  },
+  "nightOwl": {
+    "name": "Tom",
+    "nightPercent": 29,
+    "peakHour": 2,
+    "hours": [
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      2,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "topWords": [
+    {
+      "word": "book",
+      "count": 4
+    },
+    {
+      "word": "thursday",
+      "count": 4
+    },
+    {
+      "word": "finished",
+      "count": 3
+    },
+    {
+      "word": "friday",
+      "count": 2
+    },
+    {
+      "word": "shorter",
+      "count": 2
+    }
+  ],
+  "awards": [
+    {
+      "id": "ghost",
+      "name": "Priya",
+      "value": 19,
+      "premium": false
+    }
+  ]
+}
