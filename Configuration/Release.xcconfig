@@ -1,7 +1,6 @@
 #include "Base.xcconfig"
 
-// Yayın adresi bilerek boş: API henüz yayında değil. Boşken uygulama dalga kartında
-// "servis ayarlı değil" durumunu gösterir. Gerçek adres Local.xcconfig içinde verilir.
-GORULDU_API_BASE_URL =
+// Yayınlanan API. Başka bir adres Local.xcconfig içinde bu satırı ezer.
+GORULDU_API_BASE_URL = https:/$()/goruldu-api.onrender.com
 
 #include? "Local.xcconfig"

@@ -23,7 +23,7 @@ struct RoastService: Sendable {
         let people = Array(report.participants.prefix(Self.maxParticipants))
         var request = URLRequest(url: base.appendingPathComponent("v1/roasts"))
         request.httpMethod = "POST"
-        request.timeoutInterval = 30
+        request.timeoutInterval = 60
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if let key = config.appKey { request.setValue(key, forHTTPHeaderField: "x-app-key") }
         request.httpBody = try JSONEncoder().encode(Self.body(report: report, people: people, locale: locale))
