@@ -477,40 +477,6 @@
         }
       }
     },
-    "ceremony.locked.reason" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the reason is inside"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sebebi içeride yazıyor"
-          }
-        }
-      }
-    },
-    "ceremony.locked.who" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Who is it"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kimdir"
-          }
-        }
-      }
-    },
     "ceremony.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2088,6 +2054,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ kişi · %2$@ aktif gün"
+          }
+        }
+      }
+    },
+    "share.deck" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All %1$@ cards go out together."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ kartın hepsi birlikte gider."
           }
         }
       }

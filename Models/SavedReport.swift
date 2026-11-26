@@ -14,11 +14,20 @@ struct SavedReport: Codable, Equatable, Identifiable, Sendable {
     var createdAt: Date
     var report: ChatReport
     var roasts: [Roast]?
+    /// Bumped when the roast wording changes, so an older saved line is fetched again.
+    var roastEdition: Int?
 
-    init(id: UUID = UUID(), createdAt: Date = Date(), report: ChatReport, roasts: [Roast]? = nil) {
+    init(
+        id: UUID = UUID(),
+        createdAt: Date = Date(),
+        report: ChatReport,
+        roasts: [Roast]? = nil,
+        roastEdition: Int? = nil
+    ) {
         self.id = id
         self.createdAt = createdAt
         self.report = report
         self.roasts = roasts
+        self.roastEdition = roastEdition
     }
 }

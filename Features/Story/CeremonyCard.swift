@@ -25,11 +25,7 @@ struct CeremonyCard: View {
                         ZStack {
                             VStack(spacing: 8) {
                                 ForEach(locked.prefix(2)) { award in
-                                    PrizeRow(
-                                        kind: award.id,
-                                        name: L10n.tr("ceremony.locked.who"),
-                                        reason: L10n.tr("ceremony.locked.reason")
-                                    )
+                                    PrizeRow(kind: award.id, name: award.name, reason: AwardStyle.reason(award))
                                 }
                             }
                             .blur(radius: 7)

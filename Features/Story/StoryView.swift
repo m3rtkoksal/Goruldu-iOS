@@ -172,6 +172,9 @@ struct StoryView: View {
         }
     }
 
+    /// Matches the roast wording shipped with this build. Older saved lines are fetched again.
+    private static let roastEdition = 2
+
     private var loadedRoasts: [Roast] {
         if case .loaded(let roasts) = roastState { return roasts }
         return []
@@ -179,7 +182,7 @@ struct StoryView: View {
 
     /// The roast is asked for once and then kept with the report.
     private func loadRoast(for saved: SavedReport) async {
-        if let cached = saved.roasts, !cached.isEmpty {
+        if let cached = saved.roasts, !cached.isEmpty, saved.roastEdition == Self.roastEdition {
             roastState = .loaded(cached)
             return
         }
@@ -189,6 +192,7 @@ struct StoryView: View {
             roastState = .loaded(roasts)
             var updated = saved
             updated.roasts = roasts
+            updated.roastEdition = Self.roastEdition
             // A failed write only means the roast is asked for again next time.
             try? reports.save(updated)
         } catch is CancellationError {
