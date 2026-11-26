@@ -1,0 +1,3 @@
+# Örnek sohbet dosyaları bayt bayt korunmalı (CRLF ve BOM içerenler var).
+tests/CoreTests/Fixtures/* -text
+Resources/lise-tayfa.txt -text
