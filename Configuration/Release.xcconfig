@@ -1,0 +1,7 @@
+#include "Base.xcconfig"
+
+// Yayın adresi bilerek boş: API henüz yayında değil. Boşken uygulama dalga kartında
+// "servis ayarlı değil" durumunu gösterir. Gerçek adres Local.xcconfig içinde verilir.
+GORULDU_API_BASE_URL =
+
+#include? "Local.xcconfig"

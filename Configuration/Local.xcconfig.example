@@ -1,0 +1,6 @@
+// Bu dosyayı Local.xcconfig adıyla kopyala. Local.xcconfig repoya girmez.
+// Adreslerde "//" yerine "/$()/" yazılır.
+
+// GORULDU_API_BASE_URL[config=Release] = https:/$()/api.ornek-alan.com
+// GORULDU_API_BASE_URL[config=Debug] = http:/$()/192.168.1.20:5831
+// GORULDU_APP_KEY = buraya-api-ile-ayni-deger

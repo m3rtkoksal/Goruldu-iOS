@@ -1,0 +1,88 @@
+{
+  "identifier" : "6F1C2A90",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_defaultStorefront" : "TUR",
+    "_locale" : "tr"
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21700001",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "599.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6700000001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Tüm ödüller ve herkese yapay zeka dalgası",
+              "displayName" : "Görüldü Premium Yıllık",
+              "locale" : "tr"
+            },
+            {
+              "description" : "All awards and an AI roast for everyone",
+              "displayName" : "Görüldü Premium Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "technology.mika.goruldu.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly",
+          "subscriptionGroupID" : "21700001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "149.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6700000002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Tüm ödüller ve herkese yapay zeka dalgası",
+              "displayName" : "Görüldü Premium Haftalık",
+              "locale" : "tr"
+            },
+            {
+              "description" : "All awards and an AI roast for everyone",
+              "displayName" : "Görüldü Premium Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "technology.mika.goruldu.premium.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Premium Weekly",
+          "subscriptionGroupID" : "21700001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

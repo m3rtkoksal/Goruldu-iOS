@@ -1,0 +1,10 @@
+// Tüm yapılandırmalarda ortak değerler.
+// Adreslerde "//" yorum sayıldığı için "https:/$()/alan.adi" biçiminde yazılır.
+// Makineye özel ya da gizli değerler Local.xcconfig içine yazılır; o dosya repoya girmez.
+
+// Gizlilik politikası ve kullanım koşulları sayfaları yayınlanınca gerçek adreslerle değiştirilecek.
+GORULDU_PRIVACY_URL = https:/$()/example.com/
+GORULDU_TERMS_URL = https:/$()/example.com/
+
+// API'de APP_KEY tanımlıysa aynı değer Local.xcconfig içinde verilir.
+GORULDU_APP_KEY =

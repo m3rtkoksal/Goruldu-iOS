@@ -1,0 +1,6 @@
+#include "Base.xcconfig"
+
+// Simülatörden yerelde çalışan API (Goruldu-Api, varsayılan port 5831).
+GORULDU_API_BASE_URL = http:/$()/localhost:5831
+
+#include? "Local.xcconfig"
