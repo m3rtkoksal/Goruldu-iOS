@@ -15,6 +15,23 @@ final class HighlightsTests: XCTestCase {
         XCTAssertEqual(highlights.pairs, highlights.pairs.sorted { $0.count > $1.count })
     }
 
+    func testKeptLinesAreRealMessagesAndStayShort() throws {
+        let highlights = try ChatHighlights.build(messages: ChatParser.parse(Fixture.text("lise-tayfa")))
+        XCTAssertFalse(highlights.drama.isEmpty)
+        for line in highlights.drama {
+            XCTAssertTrue(line.text.contains("!") || line.text.contains("?"))
+            XCTAssertLessThanOrEqual(line.text.count, ChatHighlights.quoteLimit)
+        }
+        XCTAssertLessThanOrEqual(highlights.drama.count, 3)
+        XCTAssertFalse(highlights.moments.isEmpty)
+        XCTAssertFalse(highlights.voices.isEmpty)
+        let report = try Fixture.report("lise-tayfa")
+        let fastest = PremiumFacts.fastest(report)
+        XCTAssertGreaterThanOrEqual(fastest.count, 2)
+        let minutes = fastest.compactMap(\.avgReplyMinutes)
+        XCTAssertEqual(minutes, minutes.sorted())
+    }
+
     func testTalkerIsTheMotorAndRankedFirst() throws {
         let report = try Fixture.report("lise-tayfa")
         XCTAssertEqual(PremiumFacts.role(of: report.talker.name, in: report), .motor)

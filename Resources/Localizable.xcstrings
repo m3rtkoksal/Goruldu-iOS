@@ -171,23 +171,6 @@
         }
       }
     },
-    "archetype.eyebrow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Archetypes"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arketipler"
-          }
-        }
-      }
-    },
     "archetype.flash" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -320,23 +303,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plan bozan"
-          }
-        }
-      }
-    },
-    "archetype.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everyone's label"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Herkesin etiketi"
           }
         }
       }
@@ -1072,6 +1038,57 @@
         }
       }
     },
+    "drama.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody raised their voice in this chat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sohbette ses yükselten satır yok."
+          }
+        }
+      }
+    },
+    "drama.eyebrow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drama"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drama"
+          }
+        }
+      }
+    },
+    "drama.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The lines that set it off"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ortalığı karıştıran satırlar"
+          }
+        }
+      }
+    },
     "fastest.compare" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1102,23 +1119,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En hızlı cevap"
-          }
-        }
-      }
-    },
-    "fastest.note" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The opposite of the left-on-read champion."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Görüldü Kralı'nın tersi."
           }
         }
       }
@@ -1775,30 +1775,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No message text. Only the day and the count."
+            "value" : "Only these lines are kept. The rest of the chat is discarded."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mesaj metni yok. Sadece gün ve sayı."
-          }
-        }
-      }
-    },
-    "moments.night" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@ messages between midnight and 4."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ gecesi, 00–04 arası %2$@ mesaj."
+            "value" : "Sadece bu satırlar duruyor. Sohbetin geri kalanı silinir."
           }
         }
       }
@@ -2200,13 +2183,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Archetypes"
+            "value" : "Drama"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arketipler"
+            "value" : "Drama"
           }
         }
       }
@@ -2343,6 +2326,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grup havası"
+          }
+        }
+      }
+    },
+    "quote.reply" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@"
           }
         }
       }
@@ -2999,13 +2999,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Archetypes"
+            "value" : "Drama"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arketipler"
+            "value" : "Drama"
           }
         }
       }

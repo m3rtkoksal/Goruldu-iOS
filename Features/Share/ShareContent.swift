@@ -152,19 +152,15 @@ struct ShareContent: Equatable {
                 slow.map { L10n.tr("fastest.compare", shown($0.name), Format.duration(minutes: $0.avgReplyMinutes)) } ?? ""
             )
         case .moments:
-            let busy = highlights.map { L10n.tr("moments.busy", Format.number($0.busiestCount)) } ?? ""
+            let quote = highlights?.moments.first?.text ?? ""
             return (
                 highlights.map { Format.day($0.busiestDate) } ?? "",
                 Format.number(highlights?.busiestCount ?? 0),
-                busy
+                quote
             )
         case .archetypes:
-            return (
-                L10n.tr("archetype.title"),
-                "",
-                report.participants.map { "\(shown($0.name)) \(PremiumFacts.role(of: $0.name, in: report).title)" }
-                    .joined(separator: " · ")
-            )
+            let quote = highlights?.drama.first.map { "\($0.name): \($0.text)" } ?? ""
+            return (L10n.tr("drama.title"), "", quote)
         case .cliques:
             let line = (highlights?.pairs ?? []).map {
                 "\(shown($0.first)) ↔ \(shown($0.second))"

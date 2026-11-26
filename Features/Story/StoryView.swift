@@ -152,6 +152,10 @@ struct StoryView: View {
         reports.report(id: reportID)?.viewer() ?? report.talker.name
     }
 
+    private var savedHighlights: ChatHighlights? {
+        reports.report(id: reportID)?.highlights
+    }
+
     @ViewBuilder
     private func content(_ card: StoryCard, report: ChatReport, cards: [StoryCard], theme: StoryTheme, compact: Bool) -> some View {
         let number = StoryCard.awardNumber(of: card, in: cards)
@@ -188,19 +192,17 @@ struct StoryView: View {
         case .premiumGate:
             PremiumGateCard(theme: theme) { showsPaywall = true }
         case .role:
-            RoleCard(report: report, viewer: savedViewer(report), theme: theme)
+            RoleCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, theme: theme)
         case .vibe:
-            VibeCard(report: report, theme: theme)
+            VibeCard(report: report, highlights: savedHighlights, theme: theme)
         case .cast:
-            CastCard(report: report, viewer: savedViewer(report), theme: theme)
+            CastCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, theme: theme)
         case .fastest:
-            if let slow = report.slowReplier {
-                FastestCard(slow: slow, theme: theme)
-            }
+            FastestCard(report: report, theme: theme)
         case .moments:
-            MomentsCard(report: report, highlights: reports.report(id: reportID)?.highlights, theme: theme)
+            MomentsCard(report: report, highlights: savedHighlights, theme: theme)
         case .archetypes:
-            ArchetypeCard(report: report, theme: theme)
+            ArchetypeCard(highlights: savedHighlights, theme: theme)
         case .cliques:
             CliquesCard(pairs: reports.report(id: reportID)?.highlights?.pairs ?? [], theme: theme)
         }

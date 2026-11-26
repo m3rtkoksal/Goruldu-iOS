@@ -31,19 +31,21 @@ struct TalkerCard: View {
             Spacer(minLength: 16)
             VStack(spacing: 10) {
                 ForEach(Array(rows.enumerated()), id: \.offset) { position, person in
-                    row(person, isTop: position == 0, top: max(1, talker.messages))
+                    row(person, position: position, isTop: position == 0, top: max(1, talker.messages))
                 }
             }
         }
         .foregroundStyle(theme.foreground)
     }
 
-    private func row(_ person: ChatReport.Participant, isTop: Bool, top: Int) -> some View {
+    private func row(_ person: ChatReport.Participant, position: Int, isTop: Bool, top: Int) -> some View {
         HStack(spacing: 10) {
+            Text(verbatim: "#\(position + 1)")
+                .font(.ui(13, .bold))
+                .frame(width: 26, alignment: .leading)
             Text(verbatim: person.name)
                 .font(.ui(14, isTop ? .bold : .semibold))
                 .lineLimit(1)
-                .frame(width: 76, alignment: .leading)
             GeometryReader { proxy in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -54,12 +56,12 @@ struct TalkerCard: View {
                 }
             }
             .frame(height: 24)
-            Text(verbatim: Format.number(person.messages))
-                .font(.ui(14, isTop ? .bold : .semibold))
+            Text(verbatim: Format.percent(person.sharePercent))
+                .font(.ui(16, isTop ? .bold : .semibold))
                 .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
-                .frame(width: 54, alignment: .trailing)
+                .frame(width: 48, alignment: .trailing)
         }
         .accessibilityElement(children: .combine)
     }
