@@ -90,6 +90,10 @@ struct StoryView: View {
             if index > 0 { index -= 1 }
         }
         .task(id: roastAttempt) { await loadRoast(for: saved) }
+        .task(id: premium.isPremium) {
+            guard premium.isPremium else { return }
+            await loadReading(for: saved)
+        }
         .fullScreenCover(isPresented: $showsPaywall) {
             PaywallView()
         }
@@ -156,6 +160,10 @@ struct StoryView: View {
         reports.report(id: reportID)?.highlights
     }
 
+    private var savedReading: ChatReading? {
+        reports.report(id: reportID)?.reading
+    }
+
     @ViewBuilder
     private func content(_ card: StoryCard, report: ChatReport, cards: [StoryCard], theme: StoryTheme, compact: Bool) -> some View {
         let number = StoryCard.awardNumber(of: card, in: cards)
@@ -192,19 +200,19 @@ struct StoryView: View {
         case .premiumGate:
             PremiumGateCard(theme: theme) { showsPaywall = true }
         case .role:
-            RoleCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, theme: theme)
+            RoleCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, reading: savedReading, theme: theme)
         case .vibe:
-            VibeCard(report: report, highlights: savedHighlights, theme: theme)
+            VibeCard(report: report, highlights: savedHighlights, reading: savedReading, theme: theme)
         case .cast:
-            CastCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, theme: theme)
+            CastCard(report: report, viewer: savedViewer(report), highlights: savedHighlights, reading: savedReading, theme: theme)
         case .fastest:
             FastestCard(report: report, theme: theme)
         case .moments:
-            MomentsCard(report: report, highlights: savedHighlights, theme: theme)
+            MomentsCard(report: report, highlights: savedHighlights, reading: savedReading, theme: theme)
         case .archetypes:
-            ArchetypeCard(highlights: savedHighlights, theme: theme)
+            ArchetypeCard(highlights: savedHighlights, reading: savedReading, theme: theme)
         case .cliques:
-            CliquesCard(pairs: reports.report(id: reportID)?.highlights?.pairs ?? [], theme: theme)
+            CliquesCard(pairs: reports.report(id: reportID)?.highlights?.pairs ?? [], reading: savedReading, theme: theme)
         }
     }
 
@@ -237,6 +245,24 @@ struct StoryView: View {
             roastState = .failed(failure)
         } catch {
             roastState = .failed(.badResponse)
+        }
+    }
+
+    /// Asked once the subscription is on. The lines were already chosen; the model only names them.
+    private func loadReading(for saved: SavedReport) async {
+        if let cached = saved.reading, saved.readingEdition == ReadingService.edition, !cached.vibeTitle.isEmpty {
+            return
+        }
+        do {
+            let reading = try await model.readingService.reading(for: saved, locale: L10n.apiLocale)
+            var updated = reports.report(id: saved.id) ?? saved
+            updated.reading = reading
+            updated.readingEdition = ReadingService.edition
+            try? reports.save(updated)
+        } catch is CancellationError {
+            return
+        } catch {
+            return
         }
     }
 

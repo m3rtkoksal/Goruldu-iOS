@@ -28,12 +28,19 @@ final class AppModel {
     let reports: ReportStore
     let premium: PremiumStore
     let roastService: RoastService
+    let readingService: ReadingService
 
-    init(reports: ReportStore? = nil, premium: PremiumStore? = nil, roastService: RoastService = RoastService()) {
+    init(
+        reports: ReportStore? = nil,
+        premium: PremiumStore? = nil,
+        roastService: RoastService = RoastService(),
+        readingService: ReadingService = ReadingService()
+    ) {
         let store = reports ?? ReportStore()
         self.reports = store
         self.premium = premium ?? PremiumStore()
         self.roastService = roastService
+        self.readingService = readingService
         stack = [store.reports.isEmpty ? .welcome : .home]
     }
 

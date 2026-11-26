@@ -19,6 +19,9 @@ struct SavedReport: Codable, Equatable, Identifiable, Sendable {
     /// The participant the phone owner picked. Nil on reports saved before that question existed.
     var viewerName: String?
     var highlights: ChatHighlights?
+    /// Paid-card copy. Nil until the subscription asks for it.
+    var reading: ChatReading?
+    var readingEdition: Int?
 
     init(
         id: UUID = UUID(),
@@ -27,7 +30,9 @@ struct SavedReport: Codable, Equatable, Identifiable, Sendable {
         roasts: [Roast]? = nil,
         roastEdition: Int? = nil,
         viewerName: String? = nil,
-        highlights: ChatHighlights? = nil
+        highlights: ChatHighlights? = nil,
+        reading: ChatReading? = nil,
+        readingEdition: Int? = nil
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -36,6 +41,8 @@ struct SavedReport: Codable, Equatable, Identifiable, Sendable {
         self.roastEdition = roastEdition
         self.viewerName = viewerName
         self.highlights = highlights
+        self.reading = reading
+        self.readingEdition = readingEdition
     }
 
     /// Who the paid "your role" card is about.
