@@ -106,9 +106,9 @@ enum ChatImporter {
     /// Files handed over by another app are copied into our Inbox; they hold message texts,
     /// so they are removed as soon as they have been read.
     private static func removeIfInbox(_ url: URL) {
-        let path = url.standardizedFileURL.path
-        let home = NSHomeDirectory()
-        guard path.hasPrefix(home), path.contains("/Inbox/") || path.hasPrefix(NSTemporaryDirectory()) else { return }
+        let path = url.resolvingSymlinksInPath().path
+        let home = URL(fileURLWithPath: NSHomeDirectory()).resolvingSymlinksInPath().path
+        guard path.hasPrefix(home + "/"), path.contains("/Inbox/") || path.contains("/tmp/") else { return }
         try? FileManager.default.removeItem(at: url)
     }
 }
