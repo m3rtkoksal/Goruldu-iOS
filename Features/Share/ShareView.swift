@@ -8,6 +8,9 @@ struct ShareView: View {
     let report: ChatReport
     let card: StoryCard
     let roasts: [Roast]
+    var premium = false
+    var viewerName = ""
+    var highlights: ChatHighlights?
 
     @State private var hidesNames = false
     @State private var export: Export = .rendering
@@ -28,7 +31,10 @@ struct ShareView: View {
     }
 
     private var contents: [ShareContent] {
-        ShareContent.pages(for: card, report: report, roasts: roasts, hideNames: hidesNames)
+        ShareContent.pages(
+            for: card, report: report, roasts: roasts, hideNames: hidesNames,
+            premium: premium, viewerName: viewerName, highlights: highlights
+        )
     }
 
     var body: some View {

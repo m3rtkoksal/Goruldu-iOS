@@ -8,7 +8,8 @@
   ],
   "settings" : {
     "_defaultStorefront" : "TUR",
-    "_locale" : "tr"
+    "_locale" : "tr_TR",
+    "_storefront" : "TUR"
   },
   "subscriptionGroups" : [
     {

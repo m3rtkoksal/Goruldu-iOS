@@ -212,6 +212,23 @@ struct PaywallView: View {
     }
 }
 
+/// The configuration prices are Turkish lira. An English phone makes StoreKit Testing
+/// report that same amount as USD, so a USD code is shown as lira.
+enum StorePrice {
+    static func text(for product: Product) -> String {
+        product.price.formatted(style(for: product))
+    }
+
+    static func weekly(for product: Product) -> String {
+        (product.price / 52).formatted(style(for: product))
+    }
+
+    private static func style(for product: Product) -> Decimal.FormatStyle.Currency {
+        let code = product.priceFormatStyle.currencyCode == "USD" ? "TRY" : product.priceFormatStyle.currencyCode
+        return .currency(code: code).locale(Locale(identifier: "tr_TR"))
+    }
+}
+
 private struct PlanTile: View {
     let product: Product
     let isSelected: Bool
@@ -224,7 +241,7 @@ private struct PlanTile: View {
                 Text(verbatim: L10n.tr(isYearly ? "paywall.plan.yearly" : "paywall.plan.weekly"))
                     .font(.ui(14, .bold))
                     .foregroundStyle(Palette.paper.opacity(0.75))
-                Text(verbatim: product.displayPrice)
+                Text(verbatim: StorePrice.text(for: product))
                     .displayStyle(23, tracking: -0.03)
                     .foregroundStyle(Palette.paper)
                     .lineLimit(1)
@@ -269,7 +286,6 @@ private struct PlanTile: View {
     /// The yearly plan shows its weekly equivalent, computed from the store price.
     private func caption(isYearly: Bool) -> String {
         guard isYearly else { return L10n.tr("paywall.plan.weekly.caption") }
-        let weekly = product.price / 52
-        return L10n.tr("paywall.plan.yearly.caption", weekly.formatted(product.priceFormatStyle))
+        return L10n.tr("paywall.plan.yearly.caption", StorePrice.weekly(for: product))
     }
 }

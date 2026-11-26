@@ -10,6 +10,7 @@ final class AppModel {
         case home
         case importChat
         case analyzing(ImportRequest)
+        case who
         case story(UUID)
     }
 
@@ -21,6 +22,8 @@ final class AppModel {
 
     private(set) var stack: [Screen]
     var importProblem: ImportProblem?
+    /// The chat waiting for the "who are you" answer. Not saved until a name is picked.
+    var pendingImport: ImportedChat?
 
     let reports: ReportStore
     let premium: PremiumStore
@@ -64,10 +67,17 @@ final class AppModel {
         startImport(.file(url))
     }
 
-    func finishImport(_ report: ChatReport) {
-        let saved = SavedReport(report: report)
+    func askWho(_ imported: ImportedChat) {
+        pendingImport = imported
+        stack = [.home, .who]
+    }
+
+    func finishImport(viewerName: String) {
+        guard let pending = pendingImport else { return }
+        let saved = SavedReport(report: pending.report, viewerName: viewerName, highlights: pending.highlights)
         do {
             try reports.save(saved)
+            pendingImport = nil
             stack = [.home, .story(saved.id)]
         } catch {
             failImport(.unreadable, fileName: nil)

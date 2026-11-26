@@ -24,7 +24,7 @@ struct StoryView: View {
 
     private func pages(for saved: SavedReport) -> some View {
         let report = saved.report
-        let cards = StoryCard.cards(for: report)
+        let cards = StoryCard.cards(for: report, premium: premium.isPremium)
         let card = cards[min(index, cards.count - 1)]
         let theme = StoryTheme.theme(for: card)
         return GeometryReader { proxy in
@@ -77,6 +77,11 @@ struct StoryView: View {
         }
         .background(theme.background.ignoresSafeArea())
         .animation(.easeOut(duration: 0.2), value: index)
+        .onChange(of: premium.isPremium) { _, unlocked in
+            guard unlocked else { return }
+            let next = StoryCard.cards(for: report, premium: true)
+            if let role = next.firstIndex(of: .role) { index = role }
+        }
         .statusBarHidden(true)
         .accessibilityAction(named: Text(verbatim: L10n.tr("story.next"))) {
             if index < cards.count - 1 { index += 1 }
@@ -89,7 +94,14 @@ struct StoryView: View {
             PaywallView()
         }
         .fullScreenCover(item: $sharedCard) { card in
-            ShareView(report: report, card: card, roasts: loadedRoasts)
+            ShareView(
+                report: report,
+                card: card,
+                roasts: loadedRoasts,
+                premium: premium.isPremium,
+                viewerName: saved.viewer(),
+                highlights: saved.highlights
+            )
         }
     }
 
@@ -136,6 +148,10 @@ struct StoryView: View {
         }
     }
 
+    private func savedViewer(_ report: ChatReport) -> String {
+        reports.report(id: reportID)?.viewer() ?? report.talker.name
+    }
+
     @ViewBuilder
     private func content(_ card: StoryCard, report: ChatReport, cards: [StoryCard], theme: StoryTheme, compact: Bool) -> some View {
         let number = StoryCard.awardNumber(of: card, in: cards)
@@ -169,6 +185,24 @@ struct StoryView: View {
                     roastAttempt += 1
                 }
             )
+        case .premiumGate:
+            PremiumGateCard(theme: theme) { showsPaywall = true }
+        case .role:
+            RoleCard(report: report, viewer: savedViewer(report), theme: theme)
+        case .vibe:
+            VibeCard(report: report, theme: theme)
+        case .cast:
+            CastCard(report: report, viewer: savedViewer(report), theme: theme)
+        case .fastest:
+            if let slow = report.slowReplier {
+                FastestCard(slow: slow, theme: theme)
+            }
+        case .moments:
+            MomentsCard(report: report, highlights: reports.report(id: reportID)?.highlights, theme: theme)
+        case .archetypes:
+            ArchetypeCard(report: report, theme: theme)
+        case .cliques:
+            CliquesCard(pairs: reports.report(id: reportID)?.highlights?.pairs ?? [], theme: theme)
         }
     }
 

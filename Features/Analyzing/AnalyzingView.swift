@@ -80,13 +80,13 @@ struct AnalyzingView: View {
         let clock = ContinuousClock()
         let started = clock.now
         do {
-            let result = try await ChatImporter.load(request, fallbackTitle: L10n.tr("common.chat"))
-            report = result
-            await animate(to: result.totalMessages)
+            let imported = try await ChatImporter.loadImported(request, fallbackTitle: L10n.tr("common.chat"))
+            report = imported.report
+            await animate(to: imported.report.totalMessages)
             let remaining = Self.minimumDuration - (clock.now - started)
             if remaining > .zero { try await Task.sleep(for: remaining) }
             guard !Task.isCancelled else { return }
-            model.finishImport(result)
+            model.askWho(imported)
         } catch let failure as ImportFailure {
             model.failImport(failure, fileName: request.fileName)
         } catch is CancellationError {

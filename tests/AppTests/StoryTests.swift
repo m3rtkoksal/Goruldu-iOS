@@ -4,7 +4,12 @@ import XCTest
 final class StoryTests: XCTestCase {
     func testFullReportShowsEveryCard() throws {
         let report = try Fixture.report("lise-tayfa")
-        XCTAssertEqual(StoryCard.cards(for: report), StoryCard.allCases)
+        XCTAssertEqual(
+            StoryCard.cards(for: report),
+            [.cover, .talker, .slowReplier, .nightOwl, .words, .ceremony, .roast, .premiumGate]
+        )
+        XCTAssertTrue(StoryCard.cards(for: report, premium: true).contains(.role))
+        XCTAssertEqual(StoryCard.cards(for: report, premium: true).last, .cliques)
     }
 
     func testCardsWithoutDataAreLeftOut() throws {
@@ -13,7 +18,7 @@ final class StoryTests: XCTestCase {
         report.nightOwl = nil
         report.topWords = []
         report.awards = []
-        XCTAssertEqual(StoryCard.cards(for: report), [.cover, .talker, .roast])
+        XCTAssertEqual(StoryCard.cards(for: report), [.cover, .talker, .roast, .premiumGate])
     }
 
     func testAwardNumbersFollowShownCards() {
@@ -42,10 +47,10 @@ final class StoryTests: XCTestCase {
         let roasts = [Roast(name: "Burak", line: "Bir satır.")]
         let single = ShareContent.pages(for: .talker, report: report, roasts: roasts, hideNames: false)
         XCTAssertEqual(single.map(\.card), [.talker])
-        let all = ShareContent.pages(for: cards.last ?? .roast, report: report, roasts: roasts, hideNames: false)
-        XCTAssertEqual(all.map(\.card), cards)
+        let all = ShareContent.pages(for: cards.last ?? .premiumGate, report: report, roasts: roasts, hideNames: false)
+        XCTAssertEqual(all.map(\.card), cards.filter { $0 != .premiumGate })
         let withoutRoast = ShareContent.pages(for: .roast, report: report, roasts: [], hideNames: false)
-        XCTAssertEqual(withoutRoast.map(\.card), cards.filter { $0 != .roast })
+        XCTAssertEqual(withoutRoast.map(\.card), [.talker])
     }
 
     func testShareFallsBackToTalkerWhenRoastIsMissing() throws {

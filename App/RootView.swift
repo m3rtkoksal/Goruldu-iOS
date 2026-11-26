@@ -24,6 +24,8 @@ struct RootView: View {
             ImportView()
         case .analyzing(let request):
             AnalyzingView(request: request)
+        case .who:
+            WhoView()
         case .story(let id):
             StoryView(reportID: id)
         }
@@ -31,14 +33,14 @@ struct RootView: View {
 
     private var usesLightSurface: Bool {
         switch model.current {
-        case .home, .analyzing: return true
+        case .home, .analyzing, .who: return true
         case .welcome, .importChat, .story: return false
         }
     }
 
     private var background: Color {
         switch model.current {
-        case .home: return Palette.paper
+        case .home, .who: return Palette.paper
         case .analyzing: return Palette.lime
         case .welcome, .importChat, .story: return Palette.ink
         }

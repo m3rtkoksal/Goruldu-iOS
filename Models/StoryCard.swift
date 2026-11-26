@@ -9,16 +9,36 @@ enum StoryCard: String, Hashable, CaseIterable, Identifiable, Sendable {
     case words
     case ceremony
     case roast
+    case premiumGate
+    case role
+    case vibe
+    case cast
+    case fastest
+    case moments
+    case archetypes
+    case cliques
 
     var id: String { rawValue }
 
-    static func cards(for report: ChatReport) -> [StoryCard] {
+    /// Free cards, then either the paywall gate or the paid cards.
+    static func cards(for report: ChatReport, premium: Bool = false) -> [StoryCard] {
         var cards: [StoryCard] = [.cover, .talker]
         if report.slowReplier != nil { cards.append(.slowReplier) }
         if report.nightOwl != nil { cards.append(.nightOwl) }
         if !report.topWords.isEmpty { cards.append(.words) }
         if !report.awards.isEmpty { cards.append(.ceremony) }
         cards.append(.roast)
+        if premium {
+            cards.append(.role)
+            cards.append(.vibe)
+            cards.append(.cast)
+            if report.slowReplier?.fastestName != nil { cards.append(.fastest) }
+            cards.append(.moments)
+            cards.append(.archetypes)
+            cards.append(.cliques)
+        } else {
+            cards.append(.premiumGate)
+        }
         return cards
     }
 

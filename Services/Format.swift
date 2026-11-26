@@ -28,6 +28,20 @@ enum Format {
         return (total / 1_440, (total % 1_440) / 60, total % 60)
     }
 
+    /// "2024-02-14" becomes a short date in the phone language.
+    static func day(_ iso: String) -> String {
+        let parts = iso.split(separator: "-")
+        guard parts.count == 3, let year = Int(parts[0]), let month = Int(parts[1]), let day = Int(parts[2]) else {
+            return iso
+        }
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+        guard let date = Calendar(identifier: .gregorian).date(from: components) else { return iso }
+        return date.formatted(.dateTime.day().month(.abbreviated).locale(Locale.current))
+    }
+
     static func clock(hour: Int, minute: Int = 0) -> String {
         "\(hour < 10 ? "0" : "")\(hour):\(minute < 10 ? "0" : "")\(minute)"
     }

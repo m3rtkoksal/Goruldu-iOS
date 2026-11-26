@@ -21,8 +21,22 @@ struct StoryTheme: Equatable {
             return StoryTheme(background: Palette.orange, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.paper)
         case .ceremony:
             return StoryTheme(background: Palette.paper, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.paper)
-        case .roast:
+        case .roast, .cliques:
             return StoryTheme(background: Palette.ink, foreground: Palette.paper, accent: Palette.lime, onAccent: Palette.ink)
+        case .premiumGate:
+            return StoryTheme(background: Palette.ink, foreground: Palette.paper, accent: Palette.lime, onAccent: Palette.ink)
+        case .role:
+            return StoryTheme(background: Palette.violet, foreground: .white, accent: Palette.lime, onAccent: Palette.ink)
+        case .vibe:
+            return StoryTheme(background: Palette.navy, foreground: .white, accent: Palette.lime, onAccent: Palette.ink)
+        case .cast:
+            return StoryTheme(background: Palette.paper, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.paper)
+        case .fastest:
+            return StoryTheme(background: Palette.lime, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.lime)
+        case .moments:
+            return StoryTheme(background: Palette.orange, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.paper)
+        case .archetypes:
+            return StoryTheme(background: Palette.pink, foreground: Palette.ink, accent: Palette.ink, onAccent: Palette.paper)
         }
     }
 }

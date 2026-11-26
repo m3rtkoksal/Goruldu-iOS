@@ -21,6 +21,12 @@ enum ImportFailure: Error, Equatable, Sendable {
     case tooLarge
 }
 
+/// A parsed chat with the paid-card counts. The message text is already gone.
+struct ImportedChat: Sendable {
+    var report: ChatReport
+    var highlights: ChatHighlights
+}
+
 /// Reads an export and computes the report. The text only lives in memory for the duration of
 /// the call; nothing but the returned report is kept.
 enum ChatImporter {
@@ -29,12 +35,20 @@ enum ChatImporter {
     static let sampleTitle = "Lise Tayfa"
 
     static func load(_ request: ImportRequest, fallbackTitle: String) async throws -> ChatReport {
+        try await loadImported(request, fallbackTitle: fallbackTitle).report
+    }
+
+    static func loadImported(_ request: ImportRequest, fallbackTitle: String) async throws -> ImportedChat {
         try await Task.detached(priority: .userInitiated) {
-            try loadSync(request, fallbackTitle: fallbackTitle)
+            try loadImportedSync(request, fallbackTitle: fallbackTitle)
         }.value
     }
 
     static func loadSync(_ request: ImportRequest, fallbackTitle: String) throws -> ChatReport {
+        try loadImportedSync(request, fallbackTitle: fallbackTitle).report
+    }
+
+    static func loadImportedSync(_ request: ImportRequest, fallbackTitle: String) throws -> ImportedChat {
         let source: (data: Data, title: String)
         switch request {
         case .sample:
@@ -47,7 +61,8 @@ enum ChatImporter {
         }
         let title = source.title.isEmpty ? fallbackTitle : source.title
         do {
-            return try ReportEngine.report(text: ReportEngine.decode(source.data), title: title)
+            let imported = try ReportEngine.imported(text: ReportEngine.decode(source.data), title: title)
+            return ImportedChat(report: imported.0, highlights: imported.1)
         } catch ReportError.unrecognized {
             throw ImportFailure.unrecognized
         } catch ReportError.tooShort {
