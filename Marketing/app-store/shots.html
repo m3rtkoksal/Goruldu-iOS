@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: Display; src: url("../../Resources/Fonts/BricolageGrotesque-ExtraBold.ttf") format("truetype"); font-weight: 800; }
+  @font-face { font-family: Text; src: url("../../Resources/Fonts/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: Text; src: url("../../Resources/Fonts/InstrumentSans-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: Text; src: url("../../Resources/Fonts/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: Text; src: url("../../Resources/Fonts/InstrumentSans-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1320px; height: 2868px; overflow: hidden; background: #0B0B0F; }
+  .shot { width: 1320px; height: 2868px; position: relative; overflow: hidden; font-family: Text, sans-serif; }
+  .lime { background: #C8F751; color: #0B0B0F; }
+  .ink { background: #0B0B0F; color: #F6F2EA; }
+  .pink { background: #FF4D8D; color: #0B0B0F; }
+  .paper { background: #F6F2EA; color: #0B0B0F; }
+  .violet { background: #7B3FF2; color: #fff; }
+  .orange { background: #FF7A1A; color: #0B0B0F; }
+  .copy { position: absolute; left: 88px; right: 88px; top: 168px; }
+  h1 { font-family: Display, sans-serif; font-weight: 800; font-size: 148px; line-height: 0.9; letter-spacing: -0.05em; }
+  h1.tight { font-size: 132px; }
+  .sub { margin-top: 36px; font-size: 40px; font-weight: 500; line-height: 1.25; max-width: 900px; letter-spacing: -0.02em; }
+  .lime .sub, .pink .sub, .paper .sub, .orange .sub { opacity: 0.72; }
+  .ink .sub, .violet .sub { opacity: 0.78; }
+  .giant { font-family: Display, sans-serif; font-weight: 800; font-size: 280px; line-height: 0.8; letter-spacing: -0.06em; color: #C8F751; }
+  .phone {
+    position: absolute; width: 880px; height: 1920px;
+    background: #0B0B0F; border-radius: 100px; padding: 18px;
+    box-shadow: 0 50px 90px rgba(11,11,15,0.28);
+  }
+  .phone.right { right: 36px; top: 1140px; }
+  .phone.left { left: 28px; top: 1180px; }
+  .screen { height: 100%; border-radius: 76px; overflow: hidden; position: relative; }
+  .island { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); width: 132px; height: 38px; background: #000; border-radius: 20px; z-index: 4; }
+  .status { position: absolute; top: 28px; left: 36px; right: 36px; z-index: 3; display: flex; justify-content: space-between; font-weight: 700; font-size: 22px; }
+  .ui { position: absolute; inset: 0; padding: 108px 40px 40px; }
+  .float {
+    position: absolute; background: #fff; color: #0B0B0F; border-radius: 32px;
+    box-shadow: 0 22px 50px rgba(11,11,15,0.18); z-index: 5;
+  }
+  .pill { display: inline-flex; align-items: center; gap: 12px; background: #C8F751; color: #0B0B0F; border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: 22px; }
+  .row { display: flex; align-items: center; gap: 16px; }
+  .bar { height: 28px; border-radius: 10px; background: rgba(255,255,255,0.14); flex: 1; overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 10px; }
+  .who { background: #fff; border-radius: 22px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; border: 3px solid transparent; }
+  .who.on { border-color: #0B0B0F; }
+  .av { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 22px; background: #eee; }
+  .who.on .av { background: #C8F751; }
+</style>
+</head>
+<body>
+<section class="shot lime" id="s1">
+  <div class="copy">
+    <h1>Sohbetinin<br>karnesi.</h1>
+    <p class="sub">WhatsApp’tan aktar. Karne telefonda çıkar.</p>
+  </div>
+  <div class="float" style="left:340px; top:2080px; padding:28px 32px; display:flex; align-items:center; gap:18px;">
+    <span style="width:18px;height:18px;border-radius:50%;background:#34C759;display:inline-block;"></span>
+    <div>
+      <div style="font-family:Display,sans-serif;font-size:40px;letter-spacing:-0.04em;">12.480 mesaj</div>
+      <div style="font-weight:600;opacity:.6;margin-top:2px;">8 kişi · 214 gün</div>
+    </div>
+  </div>
+  <div class="phone right">
+    <div class="screen" style="background:#7B3FF2;color:#fff;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span><span></span></div>
+      <div class="ui">
+        <span class="pill">2026</span>
+        <div style="font-family:Display,sans-serif;font-size:92px;line-height:.9;letter-spacing:-.05em;margin-top:36px;">Lise<br>Tayfa</div>
+        <p style="margin-top:28px;font-size:28px;line-height:1.35;opacity:.88;max-width:520px;">Kim konuştu, kim görüldü bıraktı, kim gece yazdı.</p>
+        <div style="margin-top:64px;display:flex;gap:28px;border-top:3px solid rgba(255,255,255,.35);padding-top:28px;">
+          <div><div style="font-family:Display,sans-serif;font-size:40px;">12.480</div><div style="opacity:.7;font-weight:700;">mesaj</div></div>
+          <div><div style="font-family:Display,sans-serif;font-size:40px;">8</div><div style="opacity:.7;font-weight:700;">kişi</div></div>
+          <div><div style="font-family:Display,sans-serif;font-size:40px;">214</div><div style="opacity:.7;font-weight:700;">gün</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot ink" id="s2" hidden>
+  <div class="copy">
+    <div class="giant">38%</div>
+    <h1 class="tight" style="margin-top:18px;">Bu grubun<br>sesi sensin.</h1>
+  </div>
+  <div class="float" style="left:380px; top:1920px; padding:26px 30px;">
+    <div style="font-size:22px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.45;">En çok yazan</div>
+    <div style="font-family:Display,sans-serif;font-size:48px;letter-spacing:-.04em;margin-top:4px;">Burak</div>
+  </div>
+  <div class="phone right">
+    <div class="screen" style="background:#C8F751;color:#0B0B0F;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span></div>
+      <div class="ui">
+        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;">01 · EN ÇOK YAZAN</div>
+        <div style="font-family:Display,sans-serif;font-size:84px;letter-spacing:-.05em;line-height:.9;margin-top:18px;">Burak</div>
+        <div style="font-family:Display,sans-serif;font-size:64px;letter-spacing:-.04em;margin-top:8px;">4.742</div>
+        <div style="font-size:26px;font-weight:600;margin-top:8px;opacity:.7;">Mesajların %38’i.</div>
+        <div style="margin-top:48px;display:flex;flex-direction:column;gap:18px;font-weight:700;">
+          <div class="row"><span style="width:36px;">#1</span><span style="width:120px;">Burak</span><span class="bar"><i style="width:100%;background:#0B0B0F;"></i></span><span>38%</span></div>
+          <div class="row"><span style="width:36px;">#2</span><span style="width:120px;">Zeynep</span><span class="bar"><i style="width:58%;background:#0B0B0F;opacity:.45;"></i></span><span>22%</span></div>
+          <div class="row"><span style="width:36px;">#3</span><span style="width:120px;">Mert</span><span class="bar"><i style="width:37%;background:#0B0B0F;opacity:.45;"></i></span><span>14%</span></div>
+          <div class="row"><span style="width:36px;">#4</span><span style="width:120px;">Selin</span><span class="bar"><i style="width:29%;background:#0B0B0F;opacity:.45;"></i></span><span>11%</span></div>
+          <div class="row"><span style="width:36px;">#5</span><span style="width:120px;">Can</span><span class="bar"><i style="width:21%;background:#0B0B0F;opacity:.45;"></i></span><span>8%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot pink" id="s3" hidden>
+  <div class="copy">
+    <h1>Görüldü<br>Kralı.</h1>
+    <p class="sub">Altı saat geçti. Cevap yok.</p>
+  </div>
+  <div class="float" style="left:620px; top:1680px; padding:26px 30px; transform:rotate(3deg);">
+    <div style="font-size:20px;font-weight:800;letter-spacing:.06em;">EN HIZLI</div>
+    <div style="font-family:Display,sans-serif;font-size:44px;letter-spacing:-.04em;">Zeynep · 4 dk</div>
+  </div>
+  <div class="phone left">
+    <div class="screen" style="background:#101A4D;color:#fff;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span></div>
+      <div class="ui">
+        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">02 · GÖRÜLDÜ KRALI</div>
+        <div style="font-family:Display,sans-serif;font-size:86px;letter-spacing:-.05em;line-height:.9;margin-top:22px;">Emre</div>
+        <div style="font-family:Display,sans-serif;font-size:92px;letter-spacing:-.05em;color:#C8F751;margin-top:12px;">6 saat</div>
+        <p style="margin-top:20px;font-size:28px;line-height:1.35;opacity:.85;max-width:560px;">Grup yazıyor. Emre görüyor. Cevap akşama kalıyor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot paper" id="s4" hidden>
+  <div class="copy">
+    <h1>Sen<br>hangisisin?</h1>
+    <p class="sub">Bir kere soruyoruz. Karnede senin yerin buna göre.</p>
+  </div>
+  <div class="phone right">
+    <div class="screen" style="background:#F6F2EA;color:#0B0B0F;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span></div>
+      <div class="ui">
+        <div style="font-family:Display,sans-serif;font-size:52px;letter-spacing:-.04em;line-height:.95;">Listeden kendini seç.</div>
+        <div style="margin-top:28px;">
+          <div class="who on"><div class="av">B</div><div style="flex:1"><b>Burak</b><div style="opacity:.5;font-weight:600;">4.742 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;background:#C8F751;border:3px solid #0B0B0F;"></div></div>
+          <div class="who"><div class="av">Z</div><div style="flex:1"><b>Zeynep</b><div style="opacity:.5;font-weight:600;">2.746 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
+          <div class="who"><div class="av">M</div><div style="flex:1"><b>Mert</b><div style="opacity:.5;font-weight:600;">1.747 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
+          <div class="who"><div class="av">S</div><div style="flex:1"><b>Selin</b><div style="opacity:.5;font-weight:600;">1.373 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
+        </div>
+        <div style="margin-top:18px;background:#0B0B0F;color:#C8F751;text-align:center;font-weight:800;font-size:28px;border-radius:999px;padding:22px;">Devam</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot violet" id="s5" hidden>
+  <div class="copy">
+    <h1>Grubun<br>motoru.</h1>
+    <p class="sub">Sen susunca herkes susuyor.</p>
+  </div>
+  <div class="float" style="left:300px; top:1980px; padding:28px 32px; max-width:520px;">
+    <div style="font-weight:800;font-size:22px;">1 / 8</div>
+    <div style="font-size:28px;font-weight:600;margin-top:8px;line-height:1.3;">“kanka bak ne buldum”</div>
+  </div>
+  <div class="phone right">
+    <div class="screen" style="background:#7B3FF2;color:#fff;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span></div>
+      <div class="ui">
+        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">SENİN ROLÜN</div>
+        <div style="font-family:Display,sans-serif;font-size:78px;letter-spacing:-.045em;line-height:.92;margin-top:20px;">Grubun<br>motoru</div>
+        <p style="margin-top:22px;font-size:28px;line-height:1.35;opacity:.9;">Bu sohbetin %38’i senden. Sen durunca grup da duruyor.</p>
+        <div style="display:flex;gap:18px;margin-top:40px;">
+          <div><div style="font-family:Display,sans-serif;font-size:36px;">4.742</div><div style="opacity:.7;font-weight:700;">mesaj</div></div>
+          <div><div style="font-family:Display,sans-serif;font-size:36px;">9 dk</div><div style="opacity:.7;font-weight:700;">cevap</div></div>
+          <div><div style="font-family:Display,sans-serif;font-size:36px;">%11</div><div style="opacity:.7;font-weight:700;">gece</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot orange" id="s6" hidden>
+  <div class="copy">
+    <h1>Mesaj<br>gitmez.</h1>
+    <p class="sub">Sayı kalır. Sohbet telefonda silinir.</p>
+  </div>
+  <div class="float" style="left:300px; top:1900px; padding:28px 32px;">
+    <div style="display:flex;align-items:center;gap:14px;font-weight:800;font-size:30px;">
+      <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 34 L24 50 L56 14" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 34 L36 50" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round"/></svg>
+      Telefonda kaldı
+    </div>
+    <div style="margin-top:8px;font-weight:600;opacity:.6;">Numara, link ve metin sunucuya çıkmaz.</div>
+  </div>
+  <div class="phone right">
+    <div class="screen" style="background:#0B0B0F;color:#F6F2EA;">
+      <div class="island"></div>
+      <div class="status"><span>09:41</span></div>
+      <div class="ui">
+        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">PAYLAŞ</div>
+        <div style="font-family:Display,sans-serif;font-size:72px;letter-spacing:-.045em;line-height:.92;margin-top:16px;">Kartı<br>gruba at.</div>
+        <div style="margin-top:36px;background:#16161D;border-radius:28px;padding:28px;">
+          <div style="font-size:22px;font-weight:700;opacity:.6;">Lise Tayfa</div>
+          <div style="font-family:Display,sans-serif;font-size:40px;margin-top:8px;">6 kart, tek paylaşım</div>
+          <div style="margin-top:22px;display:flex;gap:10px;">
+            <div style="flex:1;height:120px;border-radius:16px;background:#7B3FF2;"></div>
+            <div style="flex:1;height:120px;border-radius:16px;background:#C8F751;"></div>
+            <div style="flex:1;height:120px;border-radius:16px;background:#FF4D8D;"></div>
+            <div style="flex:1;height:120px;border-radius:16px;background:#FF7A1A;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const n = new URLSearchParams(location.search).get("n") || "1";
+  document.querySelectorAll(".shot").forEach((el) => { el.hidden = el.id !== "s" + n; });
+</script>
+</body>
+</html>
