@@ -15,24 +15,26 @@ struct SlowReplierCard: View {
         }
     }
 
-    /// Reply times, fastest first. The last strip is the slowest person.
+    /// Reply times, fastest first. The podium is 2-1-3. The last strip is the slowest person.
     private var race: some View {
         let ranked = ReportBoard.fastest(report)
         return VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("fastest.eyebrow"))
-            if let first = ranked.first {
-                WinnerName(name: first.name, size: compact ? 64 : 84)
-                    .padding(.top, 12)
-                Text(verbatim: first.avgReplyMinutes.map(Format.duration(minutes:)) ?? "")
-                    .displayStyle(40, tracking: -0.045)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .padding(.top, 6)
-            }
+            MedalPodium(
+                slots: ranked.prefix(3).enumerated().map { index, person in
+                    MedalPodium.Slot(
+                        place: index + 1,
+                        name: person.name,
+                        value: person.avgReplyMinutes.map(Format.duration(minutes:)) ?? ""
+                    )
+                },
+                compact: compact
+            )
+            .padding(.top, 12)
             VStack(spacing: 8) {
-                ForEach(Array(ranked.dropFirst().enumerated()), id: \.offset) { offset, person in
+                ForEach(Array(ranked.enumerated()), id: \.offset) { position, person in
                     HStack(spacing: 8) {
-                        Text(verbatim: "#\(offset + 2)")
+                        Text(verbatim: "#\(position + 1)")
                             .font(.ui(14, .bold))
                             .frame(width: 28, alignment: .leading)
                         Text(verbatim: person.name)
@@ -46,10 +48,10 @@ struct SlowReplierCard: View {
                     }
                     .padding(.horizontal, 12)
                     .frame(height: compact ? 32 : 36)
-                    .background(theme.foreground.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(theme.foreground.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             }
-            .padding(.top, 16)
+            .padding(.top, 14)
             Spacer(minLength: 12)
             HStack(spacing: 8) {
                 Text(verbatim: L10n.tr("award.slowReplier"))

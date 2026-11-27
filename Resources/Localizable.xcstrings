@@ -3604,23 +3604,6 @@
           }
         }
       }
-    },
-    "words.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What did you say the most?"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En çok ne dediniz?"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

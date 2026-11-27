@@ -50,7 +50,7 @@ final class StoryTests: XCTestCase {
         let single = ShareContent.pages(for: .talker, report: report, roasts: roasts, hideNames: false)
         XCTAssertEqual(single.map(\.card), [.talker])
         let all = ShareContent.pages(for: cards.last ?? .premiumGate, report: report, roasts: roasts, hideNames: false)
-        XCTAssertEqual(all.map(\.card), cards.filter { $0 != .premiumGate && $0 != .talker && $0 != .fastest })
+        XCTAssertEqual(all.map(\.card), cards.filter { $0 != .premiumGate && $0 != .fastest })
         let withoutRoast = ShareContent.pages(for: .roast, report: report, roasts: [], hideNames: false)
         XCTAssertEqual(withoutRoast.map(\.card), [.talker])
     }
@@ -64,14 +64,16 @@ final class StoryTests: XCTestCase {
         let deck = ShareContent.deck(report: report, roasts: roasts, hideNames: false, viewerName: "Zeynep")
         let cover = try XCTUnwrap(deck.first { $0.card == .cover })
         XCTAssertEqual(cover.stats.map(\.value), [
-            Format.number(report.participantCount),
             Format.number(report.totalMessages),
+            Format.number(report.participantCount),
+            Format.number(report.activeDays),
         ])
-        XCTAssertFalse(cover.spoken.contains(Format.number(report.activeDays)))
-        XCTAssertEqual(cover.rows.map(\.name), ReportBoard.talkers(report).map(\.name))
-        XCTAssertEqual(cover.rows.map(\.value), ReportBoard.talkers(report).map { Format.percent($0.sharePercent) })
-        XCTAssertEqual(cover.rows.count, 8)
-        XCTAssertTrue(cover.rows.contains { $0.name == "Zeynep" && $0.you })
+        XCTAssertTrue(cover.rows.isEmpty)
+        let talkers = try XCTUnwrap(deck.first { $0.card == .talker })
+        XCTAssertEqual(talkers.rows.map(\.name), ReportBoard.talkers(report).map(\.name))
+        XCTAssertEqual(talkers.rows.map(\.value), ReportBoard.talkers(report).map { Format.percent($0.sharePercent) })
+        XCTAssertEqual(talkers.rows.count, 8)
+        XCTAssertTrue(talkers.rows.contains { $0.name == "Zeynep" && $0.you })
 
         let speed = try XCTUnwrap(deck.first { $0.card == .slowReplier })
         XCTAssertEqual(speed.rows.map(\.name), ReportBoard.fastest(report).map(\.name))
@@ -85,8 +87,8 @@ final class StoryTests: XCTestCase {
         let words = try XCTUnwrap(deck.first { $0.card == .words })
         XCTAssertEqual(words.name, report.topWords[0].word)
         XCTAssertEqual(words.stat, Format.number(report.topWords[0].count))
-        XCTAssertEqual(words.rows.map(\.name), ReportBoard.extraWords(report).map(\.word))
-        XCTAssertEqual(words.rows.map(\.value), ReportBoard.extraWords(report).map { Format.number($0.count) })
+        XCTAssertEqual(words.rows.map(\.name), report.topWords.prefix(8).map(\.word))
+        XCTAssertEqual(words.rows.map(\.value), report.topWords.prefix(8).map { Format.number($0.count) })
 
         let awards = try XCTUnwrap(deck.first { $0.card == .ceremony })
         XCTAssertEqual(awards.lines.count, ReportBoard.awards(report, premium: false).count)

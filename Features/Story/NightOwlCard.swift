@@ -11,42 +11,48 @@ struct NightOwlCard: View {
         let ranked = ReportBoard.night(report)
         VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.nightOwl")), symbol: Symbol.moon)
-            WinnerName(name: owl.name, size: ranked.isEmpty ? (compact ? 76 : 100) : (compact ? 44 : 56))
-                .padding(.top, ranked.isEmpty ? 14 : 8)
-            Text(verbatim: Format.percent(owl.nightPercent))
-                .displayStyle(ranked.isEmpty ? 46 : 32, tracking: -0.045)
-                .lineLimit(1)
-                .padding(.top, 6)
-            if ranked.isEmpty {
+            if ranked.count >= 2 {
+                MedalPodium(
+                    slots: ranked.prefix(3).enumerated().map { index, person in
+                        MedalPodium.Slot(place: index + 1, name: person.name, value: Format.percent(person.nightPercent))
+                    },
+                    compact: compact
+                )
+                .padding(.top, 12)
+                VStack(spacing: 8) {
+                    ForEach(Array(ranked.enumerated()), id: \.offset) { position, person in
+                        HStack(spacing: 8) {
+                            Text(verbatim: "#\(position + 1)")
+                                .font(.ui(14, .bold))
+                                .frame(width: 28, alignment: .leading)
+                            Text(verbatim: person.name)
+                                .font(.ui(15, .bold))
+                                .lineLimit(1)
+                            Spacer(minLength: 8)
+                            Text(verbatim: Format.percent(person.nightPercent))
+                                .font(.ui(15, .bold))
+                        }
+                        .padding(.horizontal, 12)
+                        .frame(height: compact ? 30 : 34)
+                        .background(theme.foreground.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                }
+                .padding(.top, 14)
+            } else {
+                WinnerName(name: owl.name, size: compact ? 76 : 100)
+                    .padding(.top, 14)
+                Text(verbatim: Format.percent(owl.nightPercent))
+                    .displayStyle(46, tracking: -0.045)
+                    .lineLimit(1)
+                    .padding(.top, 12)
                 Text(verbatim: L10n.tr("night.note"))
                     .font(.ui(16))
                     .lineSpacing(3)
                     .opacity(0.84)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 6)
-            }
-            chart(short: !ranked.isEmpty)
-                .padding(.top, compact ? 10 : 14)
-            if !ranked.isEmpty {
-                VStack(spacing: 6) {
-                    ForEach(Array(ranked.dropFirst().enumerated()), id: \.offset) { offset, person in
-                        HStack(spacing: 8) {
-                            Text(verbatim: "#\(offset + 2)")
-                                .font(.ui(13, .bold))
-                                .frame(width: 26, alignment: .leading)
-                            Text(verbatim: person.name)
-                                .font(.ui(14, .bold))
-                                .lineLimit(1)
-                            Spacer(minLength: 8)
-                            Text(verbatim: Format.percent(person.nightPercent))
-                                .font(.ui(15, .bold))
-                        }
-                        .padding(.horizontal, 10)
-                        .frame(height: compact ? 28 : 32)
-                        .background(theme.foreground.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    }
-                }
-                .padding(.top, 12)
+                chart(short: false)
+                    .padding(.top, compact ? 16 : 28)
             }
             Spacer(minLength: 12)
             Callout(

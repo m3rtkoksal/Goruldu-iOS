@@ -201,7 +201,7 @@ struct StoryView: View {
         case .cover:
             CoverCard(report: report, theme: theme, compact: compact)
         case .talker:
-            TalkerCard(report: report, number: number, theme: theme, compact: compact)
+            TalkerCard(report: report, number: number, theme: theme, compact: compact, viewer: viewer)
         case .slowReplier:
             if let slow = report.slowReplier {
                 SlowReplierCard(report: report, slow: slow, number: number, theme: theme, compact: compact)

@@ -67,8 +67,8 @@ struct ShareContent: Equatable {
         viewerName: String = "", highlights: ChatHighlights? = nil, reading: ChatReading? = nil
     ) -> [ShareContent] {
         StoryCard.cards(for: report, premium: premium).compactMap { card in
-            // The cover already carries the message ranking. Speed lives on the slow card.
-            if card == .premiumGate || card == .talker || card == .fastest { return nil }
+            // Speed lives on the slow card. The talker card is its own story.
+            if card == .premiumGate || card == .fastest { return nil }
             if card == .slowReplier, ReportBoard.fastest(report).isEmpty { return nil }
             if card == .nightOwl, ReportBoard.night(report).isEmpty { return nil }
             if card == .ceremony, ReportBoard.awards(report, premium: premium).isEmpty { return nil }
@@ -125,7 +125,7 @@ struct ShareContent: Equatable {
                 return ShareContent(
                     card: card, group: group, label: L10n.tr("words.eyebrow"), name: top.word,
                     stat: Format.number(top.count), note: "",
-                    rows: ReportBoard.extraWords(report).enumerated().map { index, word in
+                    rows: report.topWords.prefix(8).enumerated().map { index, word in
                         Row(place: index + 1, name: word.word, value: Format.number(word.count))
                     }
                 )
@@ -170,12 +170,10 @@ struct ShareContent: Equatable {
             return ShareContent(
                 card: card, group: group, label: "", name: report.title, stat: "", note: "",
                 stats: [
-                    Stat(value: Format.number(report.participantCount), caption: L10n.tr("cover.stat.people")),
                     Stat(value: Format.number(report.totalMessages), caption: L10n.tr("cover.stat.messages")),
-                ],
-                rows: rankRows(ReportBoard.talkers(report), viewer: viewer, hideNames: hideNames) {
-                    Format.percent($0.sharePercent)
-                }
+                    Stat(value: Format.number(report.participantCount), caption: L10n.tr("cover.stat.people")),
+                    Stat(value: Format.number(report.activeDays), caption: L10n.tr("cover.stat.days")),
+                ]
             )
         case .talker:
             break

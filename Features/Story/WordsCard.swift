@@ -5,36 +5,37 @@ struct WordsCard: View {
     let theme: StoryTheme
     let compact: Bool
 
-    private static let sizes: [CGFloat] = [78, 62, 50, 40, 34]
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("words.eyebrow"))
-            Text(verbatim: L10n.tr("words.title"))
-                .displayStyle(40, tracking: -0.045)
-                .fixedSize(horizontal: false, vertical: true)
+            if words.count >= 2 {
+                MedalPodium(
+                    slots: words.prefix(3).enumerated().map { index, word in
+                        MedalPodium.Slot(place: index + 1, name: word.word, value: Format.number(word.count))
+                    },
+                    compact: compact
+                )
                 .padding(.top, 12)
-                .accessibilityAddTraits(.isHeader)
-            VStack(alignment: .leading, spacing: 5) {
-                ForEach(Array(words.prefix(Self.sizes.count).enumerated()), id: \.offset) { position, word in
-                    HStack(alignment: .center, spacing: 12) {
+            }
+            VStack(spacing: 8) {
+                ForEach(Array(words.prefix(8).enumerated()), id: \.offset) { position, word in
+                    HStack(spacing: 8) {
+                        Text(verbatim: "#\(position + 1)")
+                            .font(.ui(14, .bold))
+                            .frame(width: 28, alignment: .leading)
                         Text(verbatim: word.word)
-                            .displayStyle(Self.sizes[position] * (compact ? 0.78 : 1), tracking: -0.05)
+                            .font(.ui(16, .bold))
                             .lineLimit(1)
-                            .minimumScaleFactor(0.35)
+                        Spacer(minLength: 8)
                         Text(verbatim: Format.number(word.count))
-                            .font(.ui(12.5, .bold))
-                            .monospacedDigit()
-                            .foregroundStyle(theme.background)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 4)
-                            .background(theme.accent, in: Capsule())
-                            .fixedSize()
+                            .font(.ui(15, .bold))
                     }
-                    .accessibilityElement(children: .combine)
+                    .padding(.horizontal, 12)
+                    .frame(height: compact ? 32 : 36)
+                    .background(theme.foreground.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             }
-            .padding(.top, compact ? 14 : 24)
+            .padding(.top, 14)
             Spacer(minLength: 12)
             if let top = words.first {
                 Callout(

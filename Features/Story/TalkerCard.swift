@@ -5,64 +5,54 @@ struct TalkerCard: View {
     let number: String
     let theme: StoryTheme
     let compact: Bool
+    var viewer: String = ""
 
     var body: some View {
-        let talker = report.talker
         let rows = ReportBoard.talkers(report)
         VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.talker")))
-            WinnerName(name: talker.name, size: compact ? 76 : 100)
-                .padding(.top, 14)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(verbatim: Format.number(talker.messages))
-                    .displayStyle(46, tracking: -0.045)
-                Text(verbatim: L10n.tr("cover.stat.messages"))
-                    .font(.ui(21, .bold))
-            }
-            .lineLimit(1)
-            .minimumScaleFactor(0.6)
+            MedalPodium(
+                slots: rows.prefix(3).enumerated().map { index, person in
+                    MedalPodium.Slot(place: index + 1, name: person.name, value: Format.percent(person.sharePercent))
+                },
+                compact: compact
+            )
             .padding(.top, 12)
-            Text(verbatim: L10n.tr("talker.note", Format.percent(talker.sharePercent)))
-                .font(.ui(16))
-                .lineSpacing(3)
-                .opacity(0.84)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 6)
-            Spacer(minLength: 16)
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 ForEach(Array(rows.enumerated()), id: \.offset) { position, person in
-                    row(person, position: position, isTop: position == 0, top: max(1, talker.messages), bar: rows.count > 6 ? 16 : 22)
+                    rankRow(person.name, place: position + 1, value: Format.percent(person.sharePercent), you: person.name == viewer)
                 }
             }
+            .padding(.top, 14)
+            Spacer(minLength: 8)
         }
         .foregroundStyle(theme.foreground)
     }
 
-    private func row(_ person: ChatReport.Participant, position: Int, isTop: Bool, top: Int, bar: CGFloat) -> some View {
-        HStack(spacing: 10) {
-            Text(verbatim: "#\(position + 1)")
-                .font(.ui(13, .bold))
-                .frame(width: 26, alignment: .leading)
-            Text(verbatim: person.name)
-                .font(.ui(14, isTop ? .bold : .semibold))
+    private func rankRow(_ name: String, place: Int, value: String, you: Bool) -> some View {
+        HStack(spacing: 8) {
+            Text(verbatim: "#\(place)")
+                .font(.ui(14, .bold))
+                .frame(width: 28, alignment: .leading)
+            Text(verbatim: name)
+                .font(.ui(15, .bold))
                 .lineLimit(1)
-            GeometryReader { proxy in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(theme.foreground.opacity(0.12))
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(theme.accent.opacity(isTop ? 1 : 0.38))
-                        .frame(width: max(8, proxy.size.width * CGFloat(person.messages) / CGFloat(top)))
-                }
+            if you {
+                Text(verbatim: L10n.tr("cast.you"))
+                    .font(.ui(11, .bold))
+                    .foregroundStyle(theme.onAccent)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(theme.accent, in: Capsule())
             }
-            .frame(height: bar)
-            Text(verbatim: Format.percent(person.sharePercent))
-                .font(.ui(16, isTop ? .bold : .semibold))
-                .monospacedDigit()
+            Spacer(minLength: 8)
+            Text(verbatim: value)
+                .font(.ui(15, .bold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
-                .frame(width: 48, alignment: .trailing)
         }
-        .accessibilityElement(children: .combine)
+        .padding(.horizontal, 12)
+        .frame(height: compact ? 32 : 36)
+        .background(theme.foreground.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
