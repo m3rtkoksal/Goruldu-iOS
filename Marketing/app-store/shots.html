@@ -17,63 +17,97 @@
   .paper { background: #F6F2EA; color: #0B0B0F; }
   .violet { background: #7B3FF2; color: #fff; }
   .orange { background: #FF7A1A; color: #0B0B0F; }
-  .copy { position: absolute; left: 88px; right: 88px; top: 168px; }
-  h1 { font-family: Display, sans-serif; font-weight: 800; font-size: 148px; line-height: 0.9; letter-spacing: -0.05em; }
-  h1.tight { font-size: 132px; }
-  .sub { margin-top: 36px; font-size: 40px; font-weight: 500; line-height: 1.25; max-width: 900px; letter-spacing: -0.02em; }
+  .copy { position: absolute; left: 84px; right: 84px; top: 150px; z-index: 3; }
+  h1 { font-family: Display, sans-serif; font-weight: 800; font-size: 156px; line-height: 0.88; letter-spacing: -0.055em; }
+  h1.tight { font-size: 128px; }
+  .sub { margin-top: 28px; font-size: 40px; font-weight: 600; line-height: 1.25; max-width: 860px; letter-spacing: -0.02em; }
   .lime .sub, .pink .sub, .paper .sub, .orange .sub { opacity: 0.72; }
-  .ink .sub, .violet .sub { opacity: 0.78; }
-  .giant { font-family: Display, sans-serif; font-weight: 800; font-size: 280px; line-height: 0.8; letter-spacing: -0.06em; color: #C8F751; }
+  .ink .sub, .violet .sub { opacity: 0.8; }
+  .giant { font-family: Display, sans-serif; font-weight: 800; font-size: 300px; line-height: 0.78; letter-spacing: -0.07em; color: #C8F751; }
+
   .phone {
-    position: absolute; width: 880px; height: 1920px;
-    background: #0B0B0F; border-radius: 100px; padding: 18px;
-    box-shadow: 0 50px 90px rgba(11,11,15,0.28);
+    position: absolute; background: #111114; border-radius: 108px; padding: 18px;
+    box-shadow: 0 70px 120px rgba(11,11,15,0.38);
+    z-index: 2;
   }
-  .phone.right { right: 36px; top: 1140px; }
-  .phone.left { left: 28px; top: 1180px; }
-  .screen { height: 100%; border-radius: 76px; overflow: hidden; position: relative; }
-  .island { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); width: 132px; height: 38px; background: #000; border-radius: 20px; z-index: 4; }
-  .status { position: absolute; top: 28px; left: 36px; right: 36px; z-index: 3; display: flex; justify-content: space-between; font-weight: 700; font-size: 22px; }
-  .ui { position: absolute; inset: 0; padding: 108px 40px 40px; }
+  /* Side shots: the phone leans, like a poster propped on its corner. */
+  .lean-r { width: 900px; height: 1860px; right: -150px; bottom: -280px; transform: rotate(-16deg); }
+  .lean-l { width: 900px; height: 1860px; left: -170px; bottom: -260px; transform: rotate(15deg); }
+  /* Middle two: the phone stands straight and the lower half is cut. */
+  .stand { width: 980px; height: 1960px; left: 170px; bottom: -520px; }
+
+  .screen { height: 100%; border-radius: 86px; overflow: hidden; position: relative; }
+  .island { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); width: 148px; height: 42px; background: #000; border-radius: 22px; z-index: 4; }
+  .status { position: absolute; top: 30px; left: 44px; right: 44px; z-index: 3; display: flex; justify-content: space-between; font-weight: 700; font-size: 24px; }
+  .ui { position: absolute; inset: 0; padding: 118px 40px 48px; }
+
   .float {
-    position: absolute; background: #fff; color: #0B0B0F; border-radius: 32px;
-    box-shadow: 0 22px 50px rgba(11,11,15,0.18); z-index: 5;
+    position: absolute; background: #fff; color: #0B0B0F; border-radius: 36px;
+    box-shadow: 0 28px 60px rgba(11,11,15,0.22); z-index: 5;
   }
-  .pill { display: inline-flex; align-items: center; gap: 12px; background: #C8F751; color: #0B0B0F; border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: 22px; }
-  .row { display: flex; align-items: center; gap: 16px; }
-  .bar { height: 28px; border-radius: 10px; background: rgba(255,255,255,0.14); flex: 1; overflow: hidden; }
-  .bar > i { display: block; height: 100%; border-radius: 10px; }
-  .who { background: #fff; border-radius: 22px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; border: 3px solid transparent; }
+  .chip {
+    position: absolute; z-index: 5; border-radius: 28px; padding: 18px 22px;
+    font-weight: 800; box-shadow: 0 18px 40px rgba(11,11,15,0.18);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .kicker { font-weight: 800; letter-spacing: 0.04em; font-size: 26px; text-transform: uppercase; }
+  .name { font-family: Display, sans-serif; letter-spacing: -0.05em; line-height: 0.9; }
+  .podium { display: flex; align-items: flex-end; gap: 14px; margin-top: 28px; }
+  .pod {
+    flex: 1; border-radius: 28px; color: #0B0B0F; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px;
+    padding: 16px 10px 18px;
+  }
+  .pod i {
+    width: 42px; height: 42px; border-radius: 50%; background: #fff; font-style: normal;
+    display: grid; place-items: center; font-weight: 800; font-size: 22px;
+  }
+  .pod b { font-size: 26px; line-height: 1.05; }
+  .pod em { font-style: normal; font-weight: 800; font-size: 28px; }
+  .p1 { height: 300px; background: #F6B7C8; }
+  .p2 { height: 246px; background: #C6F3DC; }
+  .p3 { height: 210px; background: #F8CBA8; }
+  .ranks { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .rank {
+    display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 18px;
+    border-radius: 18px; background: rgba(11,11,15,0.08); font-weight: 800; font-size: 26px;
+  }
+  .rank span:first-child { width: 52px; }
+  .rank span:nth-child(2) { flex: 1; }
+  .who { background: #fff; border-radius: 26px; padding: 20px 22px; display: flex; align-items: center; gap: 18px; margin-bottom: 16px; border: 4px solid transparent; }
   .who.on { border-color: #0B0B0F; }
-  .av { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 22px; background: #eee; }
+  .av { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 26px; background: #eee; }
   .who.on .av { background: #C8F751; }
 </style>
 </head>
 <body>
+
 <section class="shot lime" id="s1">
   <div class="copy">
     <h1>Sohbetinin<br>karnesi.</h1>
     <p class="sub">WhatsApp’tan aktar. Karne telefonda çıkar.</p>
   </div>
-  <div class="float" style="left:340px; top:2080px; padding:28px 32px; display:flex; align-items:center; gap:18px;">
-    <span style="width:18px;height:18px;border-radius:50%;background:#34C759;display:inline-block;"></span>
-    <div>
-      <div style="font-family:Display,sans-serif;font-size:40px;letter-spacing:-0.04em;">12.480 mesaj</div>
-      <div style="font-weight:600;opacity:.6;margin-top:2px;">8 kişi · 214 gün</div>
-    </div>
+  <div class="chip" style="left:72px; top:1680px; background:#0B0B0F; color:#C8F751; transform:rotate(-6deg); font-size:32px;">
+    <span style="width:16px;height:16px;border-radius:50%;background:#C8F751;"></span>
+    12.480 mesaj
   </div>
-  <div class="phone right">
+  <div class="float" style="left:96px; top:1860px; padding:26px 30px; transform:rotate(4deg);">
+    <div style="font-weight:800;font-size:22px;letter-spacing:.06em;opacity:.45;">8 KİŞİ · 214 GÜN</div>
+    <div class="name" style="font-size:48px;margin-top:6px;">Lise Tayfa</div>
+  </div>
+  <div class="phone lean-r">
     <div class="screen" style="background:#7B3FF2;color:#fff;">
       <div class="island"></div>
       <div class="status"><span>09:41</span><span></span></div>
       <div class="ui">
-        <span class="pill">2026</span>
-        <div style="font-family:Display,sans-serif;font-size:92px;line-height:.9;letter-spacing:-.05em;margin-top:36px;">Lise<br>Tayfa</div>
-        <p style="margin-top:28px;font-size:28px;line-height:1.35;opacity:.88;max-width:520px;">Kim konuştu, kim görüldü bıraktı, kim gece yazdı.</p>
-        <div style="margin-top:64px;display:flex;gap:28px;border-top:3px solid rgba(255,255,255,.35);padding-top:28px;">
-          <div><div style="font-family:Display,sans-serif;font-size:40px;">12.480</div><div style="opacity:.7;font-weight:700;">mesaj</div></div>
-          <div><div style="font-family:Display,sans-serif;font-size:40px;">8</div><div style="opacity:.7;font-weight:700;">kişi</div></div>
-          <div><div style="font-family:Display,sans-serif;font-size:40px;">214</div><div style="opacity:.7;font-weight:700;">gün</div></div>
+        <div class="kicker" style="color:#C8F751;">2026 karnesi</div>
+        <div class="name" style="font-size:108px;margin-top:28px;">Lise<br>Tayfa</div>
+        <p style="margin-top:24px;font-size:30px;line-height:1.3;opacity:.88;font-weight:600;">Kim konuştu, kim görüldü bıraktı, kim gece yazdı.</p>
+        <div style="margin-top:56px;display:flex;gap:28px;border-top:3px solid rgba(255,255,255,.35);padding-top:28px;">
+          <div><div class="name" style="font-size:48px;">12.480</div><div style="opacity:.75;font-weight:700;margin-top:4px;">mesaj</div></div>
+          <div><div class="name" style="font-size:48px;">8</div><div style="opacity:.75;font-weight:700;margin-top:4px;">kişi</div></div>
+          <div><div class="name" style="font-size:48px;">214</div><div style="opacity:.75;font-weight:700;margin-top:4px;">gün</div></div>
         </div>
       </div>
     </div>
@@ -83,27 +117,25 @@
 <section class="shot ink" id="s2" hidden>
   <div class="copy">
     <div class="giant">38%</div>
-    <h1 class="tight" style="margin-top:18px;">Bu grubun<br>sesi sensin.</h1>
+    <h1 class="tight" style="margin-top:8px;">Bu grubun<br>sesi sensin.</h1>
   </div>
-  <div class="float" style="left:380px; top:1920px; padding:26px 30px;">
-    <div style="font-size:22px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.45;">En çok yazan</div>
-    <div style="font-family:Display,sans-serif;font-size:48px;letter-spacing:-.04em;margin-top:4px;">Burak</div>
-  </div>
-  <div class="phone right">
+  <div class="chip" style="left:760px; top:1320px; background:#C8F751; color:#0B0B0F; transform:rotate(8deg); font-size:28px;">1. sıra</div>
+  <div class="phone lean-l">
     <div class="screen" style="background:#C8F751;color:#0B0B0F;">
       <div class="island"></div>
       <div class="status"><span>09:41</span></div>
       <div class="ui">
-        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;">01 · EN ÇOK YAZAN</div>
-        <div style="font-family:Display,sans-serif;font-size:84px;letter-spacing:-.05em;line-height:.9;margin-top:18px;">Burak</div>
-        <div style="font-family:Display,sans-serif;font-size:64px;letter-spacing:-.04em;margin-top:8px;">4.742</div>
-        <div style="font-size:26px;font-weight:600;margin-top:8px;opacity:.7;">Mesajların %38’i.</div>
-        <div style="margin-top:48px;display:flex;flex-direction:column;gap:18px;font-weight:700;">
-          <div class="row"><span style="width:36px;">#1</span><span style="width:120px;">Burak</span><span class="bar"><i style="width:100%;background:#0B0B0F;"></i></span><span>38%</span></div>
-          <div class="row"><span style="width:36px;">#2</span><span style="width:120px;">Zeynep</span><span class="bar"><i style="width:58%;background:#0B0B0F;opacity:.45;"></i></span><span>22%</span></div>
-          <div class="row"><span style="width:36px;">#3</span><span style="width:120px;">Mert</span><span class="bar"><i style="width:37%;background:#0B0B0F;opacity:.45;"></i></span><span>14%</span></div>
-          <div class="row"><span style="width:36px;">#4</span><span style="width:120px;">Selin</span><span class="bar"><i style="width:29%;background:#0B0B0F;opacity:.45;"></i></span><span>11%</span></div>
-          <div class="row"><span style="width:36px;">#5</span><span style="width:120px;">Can</span><span class="bar"><i style="width:21%;background:#0B0B0F;opacity:.45;"></i></span><span>8%</span></div>
+        <div class="kicker">Ödül 01 · Çenesi düşük</div>
+        <div class="podium">
+          <div class="pod p2"><i>2</i><b>Zeynep</b><em>22%</em></div>
+          <div class="pod p1"><i>1</i><b>Burak</b><em>38%</em></div>
+          <div class="pod p3"><i>3</i><b>Mert</b><em>14%</em></div>
+        </div>
+        <div class="ranks">
+          <div class="rank"><span>#1</span><span>Burak</span><span>38%</span></div>
+          <div class="rank"><span>#2</span><span>Zeynep</span><span>22%</span></div>
+          <div class="rank"><span>#3</span><span>Mert</span><span>14%</span></div>
+          <div class="rank"><span>#4</span><span>Selin</span><span>11%</span></div>
         </div>
       </div>
     </div>
@@ -115,19 +147,27 @@
     <h1>Görüldü<br>Kralı.</h1>
     <p class="sub">Altı saat geçti. Cevap yok.</p>
   </div>
-  <div class="float" style="left:620px; top:1680px; padding:26px 30px; transform:rotate(3deg);">
-    <div style="font-size:20px;font-weight:800;letter-spacing:.06em;">EN HIZLI</div>
-    <div style="font-family:Display,sans-serif;font-size:44px;letter-spacing:-.04em;">Zeynep · 4 dk</div>
-  </div>
-  <div class="phone left">
-    <div class="screen" style="background:#101A4D;color:#fff;">
+  <div class="chip" style="left:64px; top:980px; background:#0B0B0F; color:#fff; transform:rotate(-8deg); font-size:28px;">En yavaş · 6 saat</div>
+  <div class="chip" style="right:56px; top:1120px; background:#fff; color:#0B0B0F; transform:rotate(7deg); font-size:28px;">En hızlı · 4 dk</div>
+  <div class="phone stand">
+    <div class="screen" style="background:#0B0B0F;color:#F6F2EA;">
       <div class="island"></div>
       <div class="status"><span>09:41</span></div>
       <div class="ui">
-        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">02 · GÖRÜLDÜ KRALI</div>
-        <div style="font-family:Display,sans-serif;font-size:86px;letter-spacing:-.05em;line-height:.9;margin-top:22px;">Emre</div>
-        <div style="font-family:Display,sans-serif;font-size:92px;letter-spacing:-.05em;color:#C8F751;margin-top:12px;">6 saat</div>
-        <p style="margin-top:20px;font-size:28px;line-height:1.35;opacity:.85;max-width:560px;">Grup yazıyor. Emre görüyor. Cevap akşama kalıyor.</p>
+        <div class="kicker" style="color:#FF4D8D;">En hızlı cevap</div>
+        <div class="podium">
+          <div class="pod p2"><i>2</i><b>Mert</b><em>9 dk</em></div>
+          <div class="pod p1"><i>1</i><b>Zeynep</b><em>4 dk</em></div>
+          <div class="pod p3"><i>3</i><b>Selin</b><em>21 dk</em></div>
+        </div>
+        <div class="ranks">
+          <div class="rank" style="background:rgba(255,255,255,.1);"><span>#1</span><span>Zeynep</span><span>4 dk</span></div>
+          <div class="rank" style="background:rgba(255,255,255,.1);"><span>#2</span><span>Mert</span><span>9 dk</span></div>
+          <div class="rank" style="background:rgba(255,255,255,.1);"><span>#3</span><span>Selin</span><span>21 dk</span></div>
+        </div>
+        <div style="margin-top:18px;background:#FF4D8D;color:#0B0B0F;border-radius:22px;padding:22px 24px;display:flex;justify-content:space-between;font-weight:800;font-size:28px;">
+          <span>Görüldü Kralı</span><span>Emre · 6 sa</span>
+        </div>
       </div>
     </div>
   </div>
@@ -138,19 +178,20 @@
     <h1>Sen<br>hangisisin?</h1>
     <p class="sub">Bir kere soruyoruz. Karnede senin yerin buna göre.</p>
   </div>
-  <div class="phone right">
+  <div class="phone stand">
     <div class="screen" style="background:#F6F2EA;color:#0B0B0F;">
       <div class="island"></div>
       <div class="status"><span>09:41</span></div>
       <div class="ui">
-        <div style="font-family:Display,sans-serif;font-size:52px;letter-spacing:-.04em;line-height:.95;">Listeden kendini seç.</div>
-        <div style="margin-top:28px;">
-          <div class="who on"><div class="av">B</div><div style="flex:1"><b>Burak</b><div style="opacity:.5;font-weight:600;">4.742 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;background:#C8F751;border:3px solid #0B0B0F;"></div></div>
-          <div class="who"><div class="av">Z</div><div style="flex:1"><b>Zeynep</b><div style="opacity:.5;font-weight:600;">2.746 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
-          <div class="who"><div class="av">M</div><div style="flex:1"><b>Mert</b><div style="opacity:.5;font-weight:600;">1.747 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
-          <div class="who"><div class="av">S</div><div style="flex:1"><b>Selin</b><div style="opacity:.5;font-weight:600;">1.373 mesaj</div></div><div style="width:28px;height:28px;border-radius:50%;border:3px solid rgba(11,11,15,.2);"></div></div>
+        <div class="name" style="font-size:64px;">Listeden<br>kendini seç.</div>
+        <div style="margin-top:36px;">
+          <div class="who on"><div class="av">B</div><div style="flex:1"><b style="font-size:30px;">Burak</b><div style="opacity:.5;font-weight:700;font-size:22px;">4.742 mesaj</div></div><div style="width:34px;height:34px;border-radius:50%;background:#C8F751;border:4px solid #0B0B0F;"></div></div>
+          <div class="who"><div class="av">Z</div><div style="flex:1"><b style="font-size:30px;">Zeynep</b><div style="opacity:.5;font-weight:700;font-size:22px;">2.746 mesaj</div></div><div style="width:34px;height:34px;border-radius:50%;border:4px solid rgba(11,11,15,.2);"></div></div>
+          <div class="who"><div class="av">M</div><div style="flex:1"><b style="font-size:30px;">Mert</b><div style="opacity:.5;font-weight:700;font-size:22px;">1.747 mesaj</div></div><div style="width:34px;height:34px;border-radius:50%;border:4px solid rgba(11,11,15,.2);"></div></div>
+          <div class="who"><div class="av">S</div><div style="flex:1"><b style="font-size:30px;">Selin</b><div style="opacity:.5;font-weight:700;font-size:22px;">1.373 mesaj</div></div><div style="width:34px;height:34px;border-radius:50%;border:4px solid rgba(11,11,15,.2);"></div></div>
+          <div class="who"><div class="av">C</div><div style="flex:1"><b style="font-size:30px;">Can</b><div style="opacity:.5;font-weight:700;font-size:22px;">998 mesaj</div></div><div style="width:34px;height:34px;border-radius:50%;border:4px solid rgba(11,11,15,.2);"></div></div>
         </div>
-        <div style="margin-top:18px;background:#0B0B0F;color:#C8F751;text-align:center;font-weight:800;font-size:28px;border-radius:999px;padding:22px;">Devam</div>
+        <div style="margin-top:8px;background:#0B0B0F;color:#C8F751;text-align:center;font-weight:800;font-size:32px;border-radius:999px;padding:26px;">Devam</div>
       </div>
     </div>
   </div>
@@ -161,22 +202,23 @@
     <h1>Grubun<br>motoru.</h1>
     <p class="sub">Sen susunca herkes susuyor.</p>
   </div>
-  <div class="float" style="left:300px; top:1980px; padding:28px 32px; max-width:520px;">
-    <div style="font-weight:800;font-size:22px;">1 / 8</div>
-    <div style="font-size:28px;font-weight:600;margin-top:8px;line-height:1.3;">“kanka bak ne buldum”</div>
+  <div class="float" style="left:48px; top:2140px; padding:28px 32px; max-width:520px; transform:rotate(-6deg);">
+    <div style="font-weight:800;font-size:22px;letter-spacing:.06em;opacity:.45;">1 / 8</div>
+    <div style="font-size:34px;font-weight:800;margin-top:8px;line-height:1.25;">“kanka bak ne buldum”</div>
   </div>
-  <div class="phone right">
-    <div class="screen" style="background:#7B3FF2;color:#fff;">
+  <div class="chip" style="right:48px; top:1320px; background:#C8F751; color:#0B0B0F; transform:rotate(8deg); font-size:28px;">%38 senden</div>
+  <div class="phone lean-r">
+    <div class="screen" style="background:#F6F2EA;color:#0B0B0F;">
       <div class="island"></div>
       <div class="status"><span>09:41</span></div>
       <div class="ui">
-        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">SENİN ROLÜN</div>
-        <div style="font-family:Display,sans-serif;font-size:78px;letter-spacing:-.045em;line-height:.92;margin-top:20px;">Grubun<br>motoru</div>
-        <p style="margin-top:22px;font-size:28px;line-height:1.35;opacity:.9;">Bu sohbetin %38’i senden. Sen durunca grup da duruyor.</p>
-        <div style="display:flex;gap:18px;margin-top:40px;">
-          <div><div style="font-family:Display,sans-serif;font-size:36px;">4.742</div><div style="opacity:.7;font-weight:700;">mesaj</div></div>
-          <div><div style="font-family:Display,sans-serif;font-size:36px;">9 dk</div><div style="opacity:.7;font-weight:700;">cevap</div></div>
-          <div><div style="font-family:Display,sans-serif;font-size:36px;">%11</div><div style="opacity:.7;font-weight:700;">gece</div></div>
+        <div class="kicker">Senin rolün</div>
+        <div class="name" style="font-size:92px;margin-top:20px;">Grubun<br>motoru</div>
+        <p style="margin-top:22px;font-size:30px;line-height:1.35;font-weight:600;opacity:.8;">Bu sohbetin %38’i senden. Sen durunca grup da duruyor.</p>
+        <div style="display:flex;gap:22px;margin-top:48px;">
+          <div><div class="name" style="font-size:44px;">4.742</div><div style="opacity:.6;font-weight:700;">mesaj</div></div>
+          <div><div class="name" style="font-size:44px;">9 dk</div><div style="opacity:.6;font-weight:700;">cevap</div></div>
+          <div><div class="name" style="font-size:44px;">%11</div><div style="opacity:.6;font-weight:700;">gece</div></div>
         </div>
       </div>
     </div>
@@ -188,34 +230,35 @@
     <h1>Mesaj<br>gitmez.</h1>
     <p class="sub">Sayı kalır. Sohbet telefonda silinir.</p>
   </div>
-  <div class="float" style="left:300px; top:1900px; padding:28px 32px;">
-    <div style="display:flex;align-items:center;gap:14px;font-weight:800;font-size:30px;">
-      <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 34 L24 50 L56 14" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 34 L36 50" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round"/></svg>
+  <div class="float" style="right:48px; top:1480px; padding:26px 28px; transform:rotate(7deg);">
+    <div style="display:flex;align-items:center;gap:12px;font-weight:800;font-size:30px;">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 34 L24 50 L56 14" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 34 L36 50" fill="none" stroke="#0B0B0F" stroke-width="8" stroke-linecap="round"/></svg>
       Telefonda kaldı
     </div>
-    <div style="margin-top:8px;font-weight:600;opacity:.6;">Numara, link ve metin sunucuya çıkmaz.</div>
   </div>
-  <div class="phone right">
+  <div class="phone lean-l">
     <div class="screen" style="background:#0B0B0F;color:#F6F2EA;">
       <div class="island"></div>
       <div class="status"><span>09:41</span></div>
       <div class="ui">
-        <div style="font-weight:800;letter-spacing:.08em;font-size:22px;color:#C8F751;">PAYLAŞ</div>
-        <div style="font-family:Display,sans-serif;font-size:72px;letter-spacing:-.045em;line-height:.92;margin-top:16px;">Kartı<br>gruba at.</div>
-        <div style="margin-top:36px;background:#16161D;border-radius:28px;padding:28px;">
-          <div style="font-size:22px;font-weight:700;opacity:.6;">Lise Tayfa</div>
-          <div style="font-family:Display,sans-serif;font-size:40px;margin-top:8px;">6 kart, tek paylaşım</div>
-          <div style="margin-top:22px;display:flex;gap:10px;">
-            <div style="flex:1;height:120px;border-radius:16px;background:#7B3FF2;"></div>
-            <div style="flex:1;height:120px;border-radius:16px;background:#C8F751;"></div>
-            <div style="flex:1;height:120px;border-radius:16px;background:#FF4D8D;"></div>
-            <div style="flex:1;height:120px;border-radius:16px;background:#FF7A1A;"></div>
+        <div class="kicker" style="color:#FF7A1A;">Paylaş</div>
+        <div class="name" style="font-size:88px;margin-top:16px;">Kartı<br>gruba at.</div>
+        <p style="margin-top:20px;font-size:28px;line-height:1.35;font-weight:600;opacity:.75;">Numara, link ve metin sunucuya çıkmaz.</p>
+        <div style="margin-top:40px;background:#16161D;border-radius:32px;padding:28px;">
+          <div style="font-size:24px;font-weight:700;opacity:.6;">Lise Tayfa</div>
+          <div class="name" style="font-size:44px;margin-top:8px;">6 kart, tek paylaşım</div>
+          <div style="margin-top:24px;display:flex;gap:12px;">
+            <div style="flex:1;height:150px;border-radius:18px;background:#7B3FF2;"></div>
+            <div style="flex:1;height:150px;border-radius:18px;background:#C8F751;"></div>
+            <div style="flex:1;height:150px;border-radius:18px;background:#FF4D8D;"></div>
+            <div style="flex:1;height:150px;border-radius:18px;background:#FF7A1A;"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <script>
   const n = new URLSearchParams(location.search).get("n") || "1";
   document.querySelectorAll(".shot").forEach((el) => { el.hidden = el.id !== "s" + n; });
