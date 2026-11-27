@@ -2,12 +2,25 @@ import Foundation
 
 /// The text of a shareable card, derived from one story page.
 struct ShareContent: Equatable {
+    struct Row: Equatable, Identifiable {
+        var place: Int
+        var name: String
+        var value: String
+        var id: Int { place }
+    }
+
     var card: StoryCard
     var group: String
     var label: String
     var name: String
     var stat: String
     var note: String
+    var rows: [Row] = []
+
+    var spoken: String {
+        let ranks = rows.map { "#\($0.place) \($0.name) \($0.value)" }.joined(separator: ", ")
+        return [label, name, stat, note, ranks].filter { !$0.isEmpty }.joined(separator: ". ")
+    }
 
     /// The last story card shares the whole set. Every earlier card shares only itself.
     static func pages(
@@ -34,7 +47,8 @@ struct ShareContent: Equatable {
         viewerName: String = "", highlights: ChatHighlights? = nil
     ) -> [ShareContent] {
         StoryCard.cards(for: report, premium: premium).compactMap { card in
-            if card == .premiumGate { return nil }
+            // The cover already carries the message ranking. The speed board covers fastest.
+            if card == .premiumGate || card == .talker || card == .fastest { return nil }
             let content = make(
                 card: card, report: report, roasts: roasts, hideNames: hideNames,
                 viewerName: viewerName, highlights: highlights
@@ -55,16 +69,25 @@ struct ShareContent: Equatable {
         switch card {
         case .slowReplier:
             if let slow = report.slowReplier {
+                let ranked = PremiumFacts.fastest(report)
+                let racing = ranked.count >= 2
                 return ShareContent(
-                    card: card, group: group, label: L10n.tr("award.slowReplier"), name: shown(slow.name),
-                    stat: Format.duration(minutes: slow.avgReplyMinutes), note: L10n.tr("slow.note")
+                    card: card, group: group,
+                    label: L10n.tr(racing ? "fastest.eyebrow" : "award.slowReplier"),
+                    name: shown(slow.name),
+                    stat: Format.duration(minutes: slow.avgReplyMinutes),
+                    note: L10n.tr(racing ? "award.slowReplier" : "slow.note"),
+                    rows: racing ? rankRows(ranked, hideNames: hideNames, value: { person in
+                        person.avgReplyMinutes.map(Format.duration(minutes:)) ?? ""
+                    }) : []
                 )
             }
         case .nightOwl:
             if let owl = report.nightOwl {
                 return ShareContent(
                     card: card, group: group, label: L10n.tr("award.nightOwl"), name: shown(owl.name),
-                    stat: Format.percent(owl.nightPercent), note: L10n.tr("night.note")
+                    stat: Format.percent(owl.nightPercent), note: "",
+                    rows: rankRows(nightRank(report), hideNames: hideNames, value: { Format.percent($0.nightPercent) })
                 )
             }
         case .words:
@@ -106,7 +129,8 @@ struct ShareContent: Equatable {
             return ShareContent(
                 card: card, group: group, label: L10n.tr("share.cover.label"), name: report.title,
                 stat: L10n.tr("common.messages", Format.number(report.totalMessages)),
-                note: L10n.tr("share.cover.note", Format.number(report.participantCount), Format.number(report.activeDays))
+                note: L10n.tr("share.cover.note", Format.number(report.participantCount), Format.number(report.activeDays)),
+                rows: rankRows(report.participants, hideNames: hideNames, value: { Format.percent($0.sharePercent) })
             )
         case .talker:
             break
@@ -115,8 +139,30 @@ struct ShareContent: Equatable {
         return ShareContent(
             card: .talker, group: group, label: L10n.tr("award.talker"), name: shown(report.talker.name),
             stat: L10n.tr("common.messages", Format.number(report.talker.messages)),
-            note: L10n.tr("talker.note", Format.percent(report.talker.sharePercent))
+            note: L10n.tr("talker.note", Format.percent(report.talker.sharePercent)),
+            rows: rankRows(report.participants, hideNames: hideNames, value: { Format.percent($0.sharePercent) })
         )
+    }
+
+    private static func rankRows(
+        _ people: [ChatReport.Participant], hideNames: Bool, value: (ChatReport.Participant) -> String
+    ) -> [Row] {
+        people.prefix(6).enumerated().map { index, person in
+            Row(
+                place: index + 1,
+                name: hideNames ? Format.masked(person.name) : person.name,
+                value: value(person)
+            )
+        }
+    }
+
+    private static func nightRank(_ report: ChatReport) -> [ChatReport.Participant] {
+        report.participants
+            .filter { $0.nightPercent > 0 }
+            .sorted { lhs, rhs in
+                if lhs.nightPercent != rhs.nightPercent { return lhs.nightPercent > rhs.nightPercent }
+                return lhs.name < rhs.name
+            }
     }
 
     private static func premiumShare(

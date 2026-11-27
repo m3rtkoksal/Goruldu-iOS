@@ -36,7 +36,7 @@ struct StoryView: View {
                 roastAttempt += 1
             },
             close: { model.showHome() },
-            share: { sharedCard = .cover }
+            share: { sharedCard = StoryCard.cards(for: report, premium: premium.isPremium).last }
         )
         .task(id: roastAttempt) { await loadRoast(for: saved) }
         .task(id: premium.isPremium) {

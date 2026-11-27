@@ -66,10 +66,10 @@ struct ShareView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 36, style: .continuous))
                         .scaleEffect(max(0.1, scale))
                         .rotationEffect(.degrees(-2))
-                        .shadow(color: StoryTheme.theme(for: item.card).background.opacity(0.35), radius: 30, x: 0, y: 20)
+                        .shadow(color: Color.black.opacity(0.18), radius: 30, x: 0, y: 20)
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(Text(verbatim: "\(item.label). \(item.name). \(item.stat). \(item.note)"))
+                        .accessibilityLabel(Text(verbatim: item.spoken))
                 }
                 .padding(.vertical, 12)
             }
@@ -137,7 +137,7 @@ struct ShareView: View {
             .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
             .clipped()
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: "\(item.label). \(item.name). \(item.stat). \(item.note)"))
+            .accessibilityLabel(Text(verbatim: item.spoken))
     }
 
     @ViewBuilder private var shareButton: some View {

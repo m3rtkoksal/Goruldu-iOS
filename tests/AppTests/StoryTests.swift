@@ -34,6 +34,8 @@ final class StoryTests: XCTestCase {
         let hidden = ShareContent.make(card: .talker, report: report, roasts: [], hideNames: true)
         XCTAssertEqual(open.name, "Burak")
         XCTAssertEqual(hidden.name, "B.")
+        XCTAssertEqual(open.rows.first?.name, "Burak")
+        XCTAssertEqual(hidden.rows.first?.name, "B.")
 
         let roasts = [Roast(name: "Burak", line: "Burak yazar, Deniz okumaz.")]
         let roast = ShareContent.make(card: .roast, report: report, roasts: roasts, hideNames: true)
@@ -48,7 +50,7 @@ final class StoryTests: XCTestCase {
         let single = ShareContent.pages(for: .talker, report: report, roasts: roasts, hideNames: false)
         XCTAssertEqual(single.map(\.card), [.talker])
         let all = ShareContent.pages(for: cards.last ?? .premiumGate, report: report, roasts: roasts, hideNames: false)
-        XCTAssertEqual(all.map(\.card), cards.filter { $0 != .premiumGate })
+        XCTAssertEqual(all.map(\.card), cards.filter { $0 != .premiumGate && $0 != .talker && $0 != .fastest })
         let withoutRoast = ShareContent.pages(for: .roast, report: report, roasts: [], hideNames: false)
         XCTAssertEqual(withoutRoast.map(\.card), [.talker])
     }
