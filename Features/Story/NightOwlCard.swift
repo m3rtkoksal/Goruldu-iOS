@@ -10,7 +10,7 @@ struct NightOwlCard: View {
     var body: some View {
         let ranked = ReportBoard.night(report)
         VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.nightOwl")), symbol: Symbol.moon)
+            StoryHeadline(text: L10n.tr("story.award", number, L10n.tr("award.nightOwl")), compact: compact)
             if ranked.count >= 2 {
                 MedalPodium(
                     slots: ranked.prefix(3).enumerated().map { index, person in

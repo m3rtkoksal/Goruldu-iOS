@@ -7,7 +7,7 @@ struct WordsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: L10n.tr("words.eyebrow"))
+            StoryHeadline(text: L10n.tr("words.eyebrow"), compact: compact)
             if words.count >= 2 {
                 MedalPodium(
                     slots: words.prefix(3).enumerated().map { index, word in

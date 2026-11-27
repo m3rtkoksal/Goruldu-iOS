@@ -10,7 +10,7 @@ struct TalkerCard: View {
     var body: some View {
         let rows = ReportBoard.talkers(report)
         VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.talker")))
+            StoryHeadline(text: L10n.tr("story.award", number, L10n.tr("award.talker")), compact: compact)
             MedalPodium(
                 slots: rows.prefix(3).enumerated().map { index, person in
                     MedalPodium.Slot(place: index + 1, name: person.name, value: Format.percent(person.sharePercent))

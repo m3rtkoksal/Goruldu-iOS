@@ -49,7 +49,11 @@ struct ShareCardView: View {
         case .talker, .slowReplier, .nightOwl, .words:
             if let title = heading {
                 Text(verbatim: title)
-                    .font(.ui(18, .bold))
+                    .displayStyle(34, tracking: -0.045)
+                    .textCase(.uppercase)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.6)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if content.rows.count >= 2 {
                 podium

@@ -18,6 +18,22 @@ struct Eyebrow: View {
     }
 }
 
+/// The award line on a ranking story. It is the poster title, not a small label.
+struct StoryHeadline: View {
+    let text: String
+    var compact: Bool
+
+    var body: some View {
+        Text(verbatim: text)
+            .displayStyle(compact ? 40 : 52, tracking: -0.045)
+            .textCase(.uppercase)
+            .lineLimit(3)
+            .minimumScaleFactor(0.55)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityAddTraits(.isHeader)
+    }
+}
+
 /// Winner name set as large as the line allows; long names shrink instead of wrapping.
 struct WinnerName: View {
     let name: String

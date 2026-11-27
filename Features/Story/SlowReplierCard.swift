@@ -19,7 +19,7 @@ struct SlowReplierCard: View {
     private var race: some View {
         let ranked = ReportBoard.fastest(report)
         return VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: L10n.tr("fastest.eyebrow"))
+            StoryHeadline(text: L10n.tr("fastest.eyebrow"), compact: compact)
             MedalPodium(
                 slots: ranked.prefix(3).enumerated().map { index, person in
                     MedalPodium.Slot(
@@ -75,7 +75,7 @@ struct SlowReplierCard: View {
 
     private var poster: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.slowReplier")))
+            StoryHeadline(text: L10n.tr("story.award", number, L10n.tr("award.slowReplier")), compact: compact)
             WinnerName(name: slow.name, size: compact ? 76 : 100)
                 .padding(.top, 14)
             Text(verbatim: Format.duration(minutes: slow.avgReplyMinutes))
