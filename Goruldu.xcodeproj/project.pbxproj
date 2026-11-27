@@ -104,15 +104,6 @@
 			);
 			sourceTree = "<group>";
 		};
-		6A0000182D0000000000A1B2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6A0000042D0000000000A1B2 /* Goruldu.app */,
-				6A0000052D0000000000A1B2 /* GorulduTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		6A0000172D0000000000A1B2 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +115,15 @@
 				6A00000B2D0000000000A1B2 /* Goruldu.storekit */,
 			);
 			path = Configuration;
+			sourceTree = "<group>";
+		};
+		6A0000182D0000000000A1B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6A0000042D0000000000A1B2 /* Goruldu.app */,
+				6A0000052D0000000000A1B2 /* GorulduTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -394,7 +394,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Configuration/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Görüldü";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Görüldü saves the cards you choose to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -426,7 +430,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Configuration/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Görüldü";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Görüldü saves the cards you choose to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -489,15 +497,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6A0000212D0000000000A1B2 /* Build configuration list for PBXProject "Goruldu" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6A0000222D0000000000A1B2 /* Debug */,
-				6A0000232D0000000000A1B2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		6A0000192D0000000000A1B2 /* Build configuration list for PBXNativeTarget "Goruldu" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -512,6 +511,15 @@
 			buildConfigurations = (
 				6A0000262D0000000000A1B2 /* Debug */,
 				6A0000272D0000000000A1B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A0000212D0000000000A1B2 /* Build configuration list for PBXProject "Goruldu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A0000222D0000000000A1B2 /* Debug */,
+				6A0000232D0000000000A1B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
