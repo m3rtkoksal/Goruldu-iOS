@@ -10,15 +10,24 @@ struct StoryView: View {
 
     @State private var roastState: RoastState = .loading
     @State private var roastAttempt = 0
+    @State private var roastTask: Task<Void, Never>?
     @State private var showsPaywall = false
     @State private var sharedCard: StoryCard?
 
+    private var roastKey: String { "\(reportID.uuidString)-\(roastAttempt)-\(L10n.apiLocale)" }
+
     var body: some View {
-        if let saved = reports.report(id: reportID) {
-            pages(for: saved)
-        } else {
-            missing
+        Group {
+            if let saved = reports.report(id: reportID) {
+                pages(for: saved)
+            } else {
+                missing
+            }
         }
+        .onChange(of: roastKey, initial: true) { _, _ in
+            startRoastLoad()
+        }
+        .onDisappear { roastTask?.cancel() }
     }
 
     private func pages(for saved: SavedReport) -> some View {
@@ -38,7 +47,6 @@ struct StoryView: View {
             close: { model.showHome() },
             share: { sharedCard = StoryCard.cards(for: report, premium: premium.isPremium).last }
         )
-        .task(id: "\(roastAttempt)-\(L10n.apiLocale)") { await loadRoast(for: saved) }
         .task(id: "\(premium.isPremium)-\(L10n.apiLocale)") {
             guard premium.isPremium else { return }
             await loadReading(for: saved)
@@ -67,28 +75,43 @@ struct StoryView: View {
     }
 
     /// The roast is asked for once and then kept with the report.
-    private func loadRoast(for saved: SavedReport) async {
-        if let cached = saved.roasts, !cached.isEmpty,
-           saved.roastEdition == Self.roastEdition, saved.roastLocale == L10n.apiLocale {
+    /// A SwiftUI `.task` was cancelled whenever the screen refreshed, and the spinner never left.
+    private func startRoastLoad() {
+        roastTask?.cancel()
+        guard let saved = reports.report(id: reportID) else { return }
+        let locale = L10n.apiLocale
+        let cached = saved.roasts ?? []
+        let cacheFits = !cached.isEmpty && saved.roastEdition == Self.roastEdition
+        if cacheFits {
             roastState = .loaded(cached)
-            return
+            if saved.roastLocale == locale { return }
+        } else {
+            roastState = .loading
         }
-        roastState = .loading
-        do {
-            let roasts = try await model.roastService.roasts(for: saved.report, locale: L10n.apiLocale)
-            roastState = .loaded(roasts)
-            var updated = saved
-            updated.roasts = roasts
-            updated.roastEdition = Self.roastEdition
-            updated.roastLocale = L10n.apiLocale
-            // A failed write only means the roast is asked for again next time.
-            try? reports.save(updated)
-        } catch is CancellationError {
-            return
-        } catch let failure as RoastService.Failure {
-            roastState = .failed(failure)
-        } catch {
-            roastState = .failed(.badResponse)
+        let report = saved.report
+        let edition = Self.roastEdition
+        roastTask = Task {
+            do {
+                let roasts = try await model.roastService.roasts(for: report, locale: locale)
+                guard !Task.isCancelled else { return }
+                roastState = .loaded(roasts)
+                var updated = reports.report(id: reportID) ?? saved
+                updated.roasts = roasts
+                updated.roastEdition = edition
+                updated.roastLocale = locale
+                // A failed write only means the roast is asked for again next time.
+                try? reports.save(updated)
+            } catch is CancellationError {
+                return
+            } catch let failure as RoastService.Failure {
+                guard !Task.isCancelled else { return }
+                if case .loaded = roastState { return }
+                roastState = .failed(failure)
+            } catch {
+                guard !Task.isCancelled else { return }
+                if case .loaded = roastState { return }
+                roastState = .failed(.badResponse)
+            }
         }
     }
 
