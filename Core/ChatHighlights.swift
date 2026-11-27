@@ -322,3 +322,38 @@ enum PremiumFacts {
         return minutes / replies
     }
 }
+
+/// The lists on the results screen. The share images read these same lists.
+enum ReportBoard {
+    /// How many people a ranking on the results screen shows.
+    static let listLimit = 8
+
+    static func talkers(_ report: ChatReport) -> [ChatReport.Participant] {
+        Array(report.participants.prefix(listLimit))
+    }
+
+    static func fastest(_ report: ChatReport) -> [ChatReport.Participant] {
+        let ranked = PremiumFacts.fastest(report)
+        guard ranked.count >= 2 else { return [] }
+        return Array(ranked.prefix(listLimit))
+    }
+
+    static func night(_ report: ChatReport) -> [ChatReport.Participant] {
+        let ranked = report.participants
+            .filter { $0.nightPercent > 0 }
+            .sorted { lhs, rhs in
+                if lhs.nightPercent != rhs.nightPercent { return lhs.nightPercent > rhs.nightPercent }
+                return lhs.name < rhs.name
+            }
+        guard ranked.count >= 2 else { return [] }
+        return Array(ranked.prefix(listLimit))
+    }
+
+    static func extraWords(_ report: ChatReport) -> [ChatReport.WordCount] {
+        Array(report.topWords.dropFirst().prefix(listLimit))
+    }
+
+    static func awards(_ report: ChatReport, premium: Bool) -> [ChatReport.Award] {
+        premium ? report.awards : report.awards.filter { !$0.premium }
+    }
+}

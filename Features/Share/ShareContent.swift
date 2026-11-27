@@ -1,12 +1,25 @@
 import Foundation
 
-/// The text of a shareable card, derived from one story page.
+/// The text of a shareable card. The rows and lines are the same lists the results screen shows.
 struct ShareContent: Equatable {
+    struct Stat: Equatable {
+        var value: String
+        var caption: String
+    }
+
     struct Row: Equatable, Identifiable {
         var place: Int
         var name: String
         var value: String
+        var you: Bool = false
         var id: Int { place }
+    }
+
+    struct Line: Equatable, Identifiable {
+        var title: String
+        var text: String
+        var note: String = ""
+        var id: Int
     }
 
     var card: StoryCard
@@ -15,43 +28,56 @@ struct ShareContent: Equatable {
     var name: String
     var stat: String
     var note: String
+    var stats: [Stat] = []
     var rows: [Row] = []
+    var lines: [Line] = []
 
     var spoken: String {
+        let figures = stats.map { "\($0.value) \($0.caption)" }.joined(separator: ", ")
         let ranks = rows.map { "#\($0.place) \($0.name) \($0.value)" }.joined(separator: ", ")
-        return [label, name, stat, note, ranks].filter { !$0.isEmpty }.joined(separator: ". ")
+        let blocks = lines.map { [$0.title, $0.text, $0.note].filter { !$0.isEmpty }.joined(separator: " ") }
+        return [label, name, figures, stat, note, ranks, blocks.joined(separator: ". "), StoreLink.url.absoluteString]
+            .filter { !$0.isEmpty }
+            .joined(separator: ". ")
     }
 
     /// The last story card shares the whole set. Every earlier card shares only itself.
     static func pages(
         for card: StoryCard, report: ChatReport, roasts: [Roast], hideNames: Bool,
-        premium: Bool = false, viewerName: String = "", highlights: ChatHighlights? = nil
+        premium: Bool = false, viewerName: String = "", highlights: ChatHighlights? = nil,
+        reading: ChatReading? = nil
     ) -> [ShareContent] {
         let shown = StoryCard.cards(for: report, premium: premium)
         let single = make(
             card: card, report: report, roasts: roasts, hideNames: hideNames,
-            viewerName: viewerName, highlights: highlights
+            premium: premium, viewerName: viewerName, highlights: highlights, reading: reading
         )
         guard card == .premiumGate || shown.last == card else { return [single] }
         let all = deck(
             report: report, roasts: roasts, hideNames: hideNames,
-            premium: card != .premiumGate && premium, viewerName: viewerName, highlights: highlights
+            premium: card != .premiumGate && premium, viewerName: viewerName,
+            highlights: highlights, reading: reading
         )
         return all.isEmpty ? [single] : all
     }
 
-    /// One image per story card, in story order. The roast card is left out until its lines exist,
-    /// so a missing roast is not replaced by a second copy of the talker card.
+    /// One image per block on the results screen, in the same order, with the same rows.
     static func deck(
         report: ChatReport, roasts: [Roast], hideNames: Bool, premium: Bool = false,
-        viewerName: String = "", highlights: ChatHighlights? = nil
+        viewerName: String = "", highlights: ChatHighlights? = nil, reading: ChatReading? = nil
     ) -> [ShareContent] {
         StoryCard.cards(for: report, premium: premium).compactMap { card in
-            // The cover already carries the message ranking. The speed board covers fastest.
+            // The cover already carries the message ranking. Speed lives on the slow card.
             if card == .premiumGate || card == .talker || card == .fastest { return nil }
+            if card == .slowReplier, ReportBoard.fastest(report).isEmpty { return nil }
+            if card == .nightOwl, ReportBoard.night(report).isEmpty { return nil }
+            if card == .ceremony, ReportBoard.awards(report, premium: premium).isEmpty { return nil }
+            if card == .moments, (highlights?.moments ?? []).isEmpty { return nil }
+            if card == .archetypes, (highlights?.drama ?? []).isEmpty { return nil }
+            if card == .cliques, (highlights?.pairs ?? []).isEmpty { return nil }
             let content = make(
                 card: card, report: report, roasts: roasts, hideNames: hideNames,
-                viewerName: viewerName, highlights: highlights
+                premium: premium, viewerName: viewerName, highlights: highlights, reading: reading
             )
             if card == .roast && content.card != .roast { return nil }
             return content
@@ -61,159 +87,231 @@ struct ShareContent: Equatable {
     /// - Parameter hideNames: Replaces every participant name with its first letter.
     static func make(
         card: StoryCard, report: ChatReport, roasts: [Roast], hideNames: Bool,
-        viewerName: String = "", highlights: ChatHighlights? = nil
+        premium: Bool = false, viewerName: String = "", highlights: ChatHighlights? = nil,
+        reading: ChatReading? = nil
     ) -> ShareContent {
         func shown(_ name: String) -> String { hideNames ? Format.masked(name) : name }
-        let group = L10n.tr("share.group", report.title, report.year)
+        let group = report.title
+        let viewer = viewerName.isEmpty ? report.talker.name : viewerName
 
         switch card {
         case .slowReplier:
-            if let slow = report.slowReplier {
-                let ranked = PremiumFacts.fastest(report)
-                let racing = ranked.count >= 2
+            let ranked = ReportBoard.fastest(report)
+            if !ranked.isEmpty {
+                let slow = report.slowReplier
                 return ShareContent(
                     card: card, group: group,
-                    label: L10n.tr(racing ? "fastest.eyebrow" : "award.slowReplier"),
-                    name: shown(slow.name),
-                    stat: Format.duration(minutes: slow.avgReplyMinutes),
-                    note: L10n.tr(racing ? "award.slowReplier" : "slow.note"),
-                    rows: racing ? rankRows(ranked, hideNames: hideNames, value: { person in
+                    label: L10n.tr("fastest.eyebrow"),
+                    name: slow.map { shown($0.name) } ?? "",
+                    stat: slow.map { Format.duration(minutes: $0.avgReplyMinutes) } ?? "",
+                    note: slow == nil ? "" : L10n.tr("award.slowReplier"),
+                    rows: rankRows(ranked, viewer: viewer, hideNames: hideNames) { person in
                         person.avgReplyMinutes.map(Format.duration(minutes:)) ?? ""
-                    }) : []
+                    }
                 )
             }
         case .nightOwl:
-            if let owl = report.nightOwl {
+            let ranked = ReportBoard.night(report)
+            if !ranked.isEmpty {
                 return ShareContent(
-                    card: card, group: group, label: L10n.tr("award.nightOwl"), name: shown(owl.name),
-                    stat: Format.percent(owl.nightPercent), note: "",
-                    rows: rankRows(nightRank(report), hideNames: hideNames, value: { Format.percent($0.nightPercent) })
+                    card: card, group: group, label: L10n.tr("award.nightOwl"),
+                    name: shown(ranked[0].name),
+                    stat: Format.percent(ranked[0].nightPercent), note: "",
+                    rows: rankRows(ranked, viewer: viewer, hideNames: hideNames) { Format.percent($0.nightPercent) }
                 )
             }
         case .words:
             if let top = report.topWords.first {
-                let others = report.topWords.dropFirst().map(\.word).joined(separator: ", ")
                 return ShareContent(
                     card: card, group: group, label: L10n.tr("words.eyebrow"), name: top.word,
-                    stat: L10n.tr("share.words.stat", Format.number(top.count)), note: others
+                    stat: Format.number(top.count), note: "",
+                    rows: ReportBoard.extraWords(report).enumerated().map { index, word in
+                        Row(place: index + 1, name: word.word, value: Format.number(word.count))
+                    }
                 )
             }
         case .ceremony:
-            if let award = report.awards.first {
+            let awards = ReportBoard.awards(report, premium: premium)
+            if let first = awards.first {
                 return ShareContent(
-                    card: card, group: group, label: L10n.tr("ceremony.eyebrow"), name: shown(award.name),
-                    stat: AwardStyle.title(award.id), note: AwardStyle.reason(award)
+                    card: card, group: group, label: L10n.tr("ceremony.eyebrow"),
+                    name: shown(first.name),
+                    stat: AwardStyle.title(first.id), note: AwardStyle.reason(first),
+                    lines: awards.enumerated().map { index, award in
+                        Line(
+                            title: AwardStyle.title(award.id),
+                            text: "\(shown(award.name)) · \(AwardStyle.reason(award))",
+                            id: index
+                        )
+                    }
                 )
             }
         case .roast:
-            if let roast = roasts.first {
-                var line = roast.line
-                if hideNames {
-                    for person in report.participants.sorted(by: { $0.name.count > $1.name.count }) {
-                        line = line.replacingOccurrences(of: person.name, with: Format.masked(person.name))
-                    }
-                }
+            let shownRoasts = ShownRoasts.lines(roasts, premium: premium)
+            if let roast = shownRoasts.first {
                 return ShareContent(
-                    card: card, group: group, label: L10n.tr("roast.eyebrow"), name: shown(roast.name),
-                    stat: "", note: line
+                    card: card, group: group, label: L10n.tr("roast.title"),
+                    name: shown(roast.name), stat: "", note: mask(roast.line, report: report, hideNames: hideNames),
+                    lines: shownRoasts.enumerated().map { index, roast in
+                        Line(
+                            title: shown(roast.name),
+                            text: mask(roast.line, report: report, hideNames: hideNames),
+                            id: index
+                        )
+                    }
                 )
             }
         case .premiumGate, .role, .vibe, .cast, .fastest, .moments, .archetypes, .cliques:
-            let viewer = viewerName.isEmpty ? report.talker.name : viewerName
-            let page = premiumShare(card, report: report, viewer: viewer, highlights: highlights, hideNames: hideNames)
-            return ShareContent(
-                card: card, group: group, label: L10n.tr("share.premium.\(card.rawValue)"),
-                name: page.name, stat: page.stat, note: page.note
+            return premiumShare(
+                card, report: report, viewer: viewer, highlights: highlights, reading: reading,
+                hideNames: hideNames, group: group
             )
         case .cover:
             return ShareContent(
-                card: card, group: group, label: L10n.tr("share.cover.label"), name: report.title,
-                stat: L10n.tr("common.messages", Format.number(report.totalMessages)),
-                note: L10n.tr("share.cover.note", Format.number(report.participantCount), Format.number(report.activeDays)),
-                rows: rankRows(report.participants, hideNames: hideNames, value: { Format.percent($0.sharePercent) })
+                card: card, group: group, label: "", name: report.title, stat: "", note: "",
+                stats: [
+                    Stat(value: Format.number(report.participantCount), caption: L10n.tr("cover.stat.people")),
+                    Stat(value: Format.number(report.totalMessages), caption: L10n.tr("cover.stat.messages")),
+                ],
+                rows: rankRows(ReportBoard.talkers(report), viewer: viewer, hideNames: hideNames) {
+                    Format.percent($0.sharePercent)
+                }
             )
         case .talker:
             break
         }
-        // The talker page, and the fallback when a page has nothing to show yet.
         return ShareContent(
             card: .talker, group: group, label: L10n.tr("award.talker"), name: shown(report.talker.name),
             stat: L10n.tr("common.messages", Format.number(report.talker.messages)),
             note: L10n.tr("talker.note", Format.percent(report.talker.sharePercent)),
-            rows: rankRows(report.participants, hideNames: hideNames, value: { Format.percent($0.sharePercent) })
+            rows: rankRows(ReportBoard.talkers(report), viewer: viewer, hideNames: hideNames) {
+                Format.percent($0.sharePercent)
+            }
         )
     }
 
     private static func rankRows(
-        _ people: [ChatReport.Participant], hideNames: Bool, value: (ChatReport.Participant) -> String
+        _ people: [ChatReport.Participant], viewer: String, hideNames: Bool,
+        value: (ChatReport.Participant) -> String
     ) -> [Row] {
-        people.prefix(6).enumerated().map { index, person in
+        people.enumerated().map { index, person in
             Row(
                 place: index + 1,
                 name: hideNames ? Format.masked(person.name) : person.name,
-                value: value(person)
+                value: value(person),
+                you: person.name == viewer
             )
         }
     }
 
-    private static func nightRank(_ report: ChatReport) -> [ChatReport.Participant] {
-        report.participants
-            .filter { $0.nightPercent > 0 }
-            .sorted { lhs, rhs in
-                if lhs.nightPercent != rhs.nightPercent { return lhs.nightPercent > rhs.nightPercent }
-                return lhs.name < rhs.name
-            }
+    private static func mask(_ text: String, report: ChatReport, hideNames: Bool) -> String {
+        guard hideNames else { return text }
+        var line = text
+        for person in report.participants.sorted(by: { $0.name.count > $1.name.count }) {
+            line = line.replacingOccurrences(of: person.name, with: Format.masked(person.name))
+        }
+        return line
     }
 
     private static func premiumShare(
-        _ card: StoryCard, report: ChatReport, viewer: String, highlights: ChatHighlights?, hideNames: Bool
-    ) -> (name: String, stat: String, note: String) {
-        let shown: (String) -> String = { hideNames ? Format.masked($0) : $0 }
+        _ card: StoryCard, report: ChatReport, viewer: String, highlights: ChatHighlights?,
+        reading: ChatReading?, hideNames: Bool, group: String
+    ) -> ShareContent {
+        func shown(_ name: String) -> String { hideNames ? Format.masked(name) : name }
         switch card {
         case .role:
             let person = PremiumFacts.person(named: viewer, in: report)
-            return (
-                shown(viewer),
-                L10n.tr("role.place", String(PremiumFacts.rank(of: viewer, in: report)), String(report.participantCount)),
-                PremiumFacts.role(of: viewer, in: report).title
-                    + " · " + Format.percent(person?.sharePercent ?? 0)
+            let named = reading?.role(named: viewer)
+            let title = named?.title ?? PremiumFacts.role(of: viewer, in: report).title
+            let place = L10n.tr(
+                "role.place",
+                String(PremiumFacts.rank(of: viewer, in: report)),
+                String(report.participantCount)
+            )
+            let percent = Format.percent(person?.sharePercent ?? report.talker.sharePercent)
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("role.eyebrow"),
+                name: title, stat: percent, note: [place, named?.line ?? ""].filter { !$0.isEmpty }.joined(separator: "\n")
             )
         case .vibe:
-            return (
-                PremiumFacts.vibe(of: report).title,
-                Format.percent(PremiumFacts.groupNightPercent(report)),
-                L10n.tr("vibe.nightShare")
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("vibe.eyebrow"),
+                name: reading?.vibeTitle ?? PremiumFacts.vibe(of: report).title,
+                stat: "", note: reading?.vibeLine ?? L10n.tr("vibe.note")
             )
         case .cast:
-            return (
-                L10n.tr("cast.title", String(report.participantCount)),
-                "",
-                report.participants.map { shown($0.name) }.joined(separator: " · ")
+            let lines = report.participants.enumerated().map { index, person in
+                let named = reading?.role(named: person.name)
+                return Line(
+                    title: shown(person.name),
+                    text: named?.title ?? PremiumFacts.role(of: person.name, in: report).title,
+                    note: mask(named?.line ?? "", report: report, hideNames: hideNames),
+                    id: index
+                )
+            }
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("cast.eyebrow"),
+                name: "", stat: "", note: "", lines: lines
+            )
+        case .moments:
+            let moments = highlights?.moments ?? []
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("moments.eyebrow"),
+                name: "", stat: "", note: "",
+                lines: moments.enumerated().map { index, line in
+                    quoteLine(line, caption: reading?.caption(ReadingService.momentID(index)), report: report, hideNames: hideNames, id: index)
+                }
+            )
+        case .archetypes:
+            let drama = highlights?.drama ?? []
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("drama.eyebrow"),
+                name: "", stat: "", note: "",
+                lines: drama.enumerated().map { index, line in
+                    quoteLine(line, caption: reading?.caption(ReadingService.dramaID(index)), report: report, hideNames: hideNames, id: index)
+                }
+            )
+        case .cliques:
+            let pairs = highlights?.pairs ?? []
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("cliques.eyebrow"),
+                name: "", stat: "", note: "",
+                lines: pairs.enumerated().map { index, pair in
+                    Line(
+                        title: "\(shown(pair.first)) · \(shown(pair.second))",
+                        text: L10n.tr("cliques.count", Format.number(pair.count)),
+                        note: mask(
+                            reading?.caption(ReadingService.cliqueID(index)) ?? "",
+                            report: report, hideNames: hideNames
+                        ),
+                        id: index
+                    )
+                }
             )
         case .fastest:
             let slow = report.slowReplier
-            return (
-                shown(slow?.fastestName ?? viewer),
-                slow?.fastestAvgReplyMinutes.map(Format.duration(minutes:)) ?? "",
-                slow.map { L10n.tr("fastest.compare", shown($0.name), Format.duration(minutes: $0.avgReplyMinutes)) } ?? ""
+            return ShareContent(
+                card: card, group: group, label: L10n.tr("fastest.eyebrow"),
+                name: shown(slow?.fastestName ?? viewer),
+                stat: slow?.fastestAvgReplyMinutes.map(Format.duration(minutes:)) ?? "",
+                note: slow.map { L10n.tr("fastest.compare", shown($0.name), Format.duration(minutes: $0.avgReplyMinutes)) } ?? ""
             )
-        case .moments:
-            let quote = highlights?.moments.first?.text ?? ""
-            return (
-                highlights.map { Format.day($0.busiestDate) } ?? "",
-                Format.number(highlights?.busiestCount ?? 0),
-                quote
-            )
-        case .archetypes:
-            let quote = highlights?.drama.first.map { "\($0.name): \($0.text)" } ?? ""
-            return (L10n.tr("drama.title"), "", quote)
-        case .cliques:
-            let line = (highlights?.pairs ?? []).map {
-                "\(shown($0.first)) ↔ \(shown($0.second))"
-            }.joined(separator: " · ")
-            return (L10n.tr("cliques.title"), "", line.isEmpty ? L10n.tr("cliques.empty") : line)
         case .cover, .talker, .slowReplier, .nightOwl, .words, .ceremony, .roast, .premiumGate:
-            return (shown(viewer), "", "")
+            return ShareContent(card: card, group: group, label: "", name: shown(viewer), stat: "", note: "")
         }
+    }
+
+    private static func quoteLine(
+        _ line: ChatHighlights.Line, caption: String?, report: ChatReport, hideNames: Bool, id: Int
+    ) -> Line {
+        let who = line.replyTo.map { L10n.tr("quote.reply", line.name, $0) } ?? line.name
+        return Line(
+            title: mask(who, report: report, hideNames: hideNames),
+            text: "“\(mask(line.text, report: report, hideNames: hideNames))”",
+            note: [Format.day(line.date), mask(caption ?? "", report: report, hideNames: hideNames)]
+                .filter { !$0.isEmpty }
+                .joined(separator: " · "),
+            id: id
+        )
     }
 }

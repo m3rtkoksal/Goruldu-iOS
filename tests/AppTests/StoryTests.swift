@@ -55,6 +55,51 @@ final class StoryTests: XCTestCase {
         XCTAssertEqual(withoutRoast.map(\.card), [.talker])
     }
 
+    func testShareImagesUseTheSameListsAsTheScreen() throws {
+        let report = try Fixture.report("lise-tayfa")
+        let roasts = [
+            Roast(name: "Burak", line: "Bir satır."),
+            Roast(name: "Deniz", line: "İkinci satır."),
+        ]
+        let deck = ShareContent.deck(report: report, roasts: roasts, hideNames: false, viewerName: "Zeynep")
+        let cover = try XCTUnwrap(deck.first { $0.card == .cover })
+        XCTAssertEqual(cover.stats.map(\.value), [
+            Format.number(report.participantCount),
+            Format.number(report.totalMessages),
+        ])
+        XCTAssertFalse(cover.spoken.contains(Format.number(report.activeDays)))
+        XCTAssertEqual(cover.rows.map(\.name), ReportBoard.talkers(report).map(\.name))
+        XCTAssertEqual(cover.rows.map(\.value), ReportBoard.talkers(report).map { Format.percent($0.sharePercent) })
+        XCTAssertEqual(cover.rows.count, 8)
+        XCTAssertTrue(cover.rows.contains { $0.name == "Zeynep" && $0.you })
+
+        let speed = try XCTUnwrap(deck.first { $0.card == .slowReplier })
+        XCTAssertEqual(speed.rows.map(\.name), ReportBoard.fastest(report).map(\.name))
+        XCTAssertEqual(speed.rows.map(\.value), ReportBoard.fastest(report).map { Format.duration(minutes: $0.avgReplyMinutes ?? 0) })
+        XCTAssertEqual(speed.name, report.slowReplier?.name)
+
+        let night = try XCTUnwrap(deck.first { $0.card == .nightOwl })
+        XCTAssertEqual(night.rows.map(\.name), ReportBoard.night(report).map(\.name))
+        XCTAssertEqual(night.rows.map(\.value), ReportBoard.night(report).map { Format.percent($0.nightPercent) })
+
+        let words = try XCTUnwrap(deck.first { $0.card == .words })
+        XCTAssertEqual(words.name, report.topWords[0].word)
+        XCTAssertEqual(words.stat, Format.number(report.topWords[0].count))
+        XCTAssertEqual(words.rows.map(\.name), ReportBoard.extraWords(report).map(\.word))
+        XCTAssertEqual(words.rows.map(\.value), ReportBoard.extraWords(report).map { Format.number($0.count) })
+
+        let awards = try XCTUnwrap(deck.first { $0.card == .ceremony })
+        XCTAssertEqual(awards.lines.count, ReportBoard.awards(report, premium: false).count)
+        XCTAssertEqual(deck.first { $0.card == .roast }?.lines.count, 1)
+
+        let paid = ShareContent.deck(report: report, roasts: roasts, hideNames: false, premium: true, viewerName: "Burak")
+        XCTAssertEqual(paid.first { $0.card == .ceremony }?.lines.count, report.awards.count)
+        XCTAssertEqual(paid.first { $0.card == .roast }?.lines.count, 2)
+        XCTAssertEqual(paid.first { $0.card == .cast }?.lines.map(\.title), report.participants.map(\.name))
+        XCTAssertEqual(StoreLink.url.absoluteString, "https://apps.apple.com/app/id6839817495")
+        XCTAssertTrue(cover.spoken.contains(StoreLink.url.absoluteString))
+    }
+
     func testShareFallsBackToTalkerWhenRoastIsMissing() throws {
         let report = try Fixture.report("lise-tayfa")
         let content = ShareContent.make(card: .roast, report: report, roasts: [], hideNames: false)

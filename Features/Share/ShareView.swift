@@ -11,6 +11,7 @@ struct ShareView: View {
     var premium = false
     var viewerName = ""
     var highlights: ChatHighlights?
+    var reading: ChatReading?
 
     @State private var hidesNames = false
     @State private var export: Export = .rendering
@@ -33,7 +34,7 @@ struct ShareView: View {
     private var contents: [ShareContent] {
         ShareContent.pages(
             for: card, report: report, roasts: roasts, hideNames: hidesNames,
-            premium: premium, viewerName: viewerName, highlights: highlights
+            premium: premium, viewerName: viewerName, highlights: highlights, reading: reading
         )
     }
 
@@ -61,7 +62,8 @@ struct ShareView: View {
                     .padding(.top, 4)
             } else if let item = contents.first {
                 GeometryReader { proxy in
-                    let scale = min(proxy.size.height / ShareCardView.size.height, proxy.size.width / ShareCardView.size.width) * 0.9
+                    let cardHeight = contents.first.map { ShareCardView.height(for: $0) } ?? ShareCardView.size.height
+                    let scale = min(proxy.size.height / cardHeight, proxy.size.width / ShareCardView.width) * 0.9
                     ShareCardView(content: item)
                         .clipShape(RoundedRectangle(cornerRadius: 36, style: .continuous))
                         .scaleEffect(max(0.1, scale))
@@ -127,11 +129,11 @@ struct ShareView: View {
     }
 
     private func preview(_ item: ShareContent, scale: CGFloat, corner: CGFloat) -> some View {
-        ShareCardView(content: item)
+            ShareCardView(content: item)
             .scaleEffect(scale, anchor: .top)
             .frame(
-                width: ShareCardView.size.width * scale,
-                height: ShareCardView.size.height * scale,
+                width: ShareCardView.width * scale,
+                height: ShareCardView.height(for: item) * scale,
                 alignment: .top
             )
             .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
@@ -142,7 +144,11 @@ struct ShareView: View {
 
     @ViewBuilder private var shareButton: some View {
         if case .ready(let urls) = export, !urls.isEmpty {
-            ShareLink(items: urls) {
+            ShareLink(
+                items: urls + [StoreLink.url],
+                subject: Text(verbatim: "Görüldü"),
+                message: Text(verbatim: StoreLink.url.absoluteString)
+            ) {
                 HStack(spacing: 8) {
                     Image(systemName: Symbol.upload).font(.system(size: 16, weight: .bold))
                     Text(verbatim: L10n.tr("story.share"))
@@ -191,7 +197,7 @@ struct ShareView: View {
             for (index, item) in contents.enumerated() {
                 let renderer = ImageRenderer(content: ShareCardView(content: item))
                 renderer.scale = 3
-                renderer.proposedSize = ProposedViewSize(ShareCardView.size)
+                renderer.proposedSize = ProposedViewSize(ShareCardView.canvasSize(for: item))
                 guard let data = renderer.uiImage?.pngData() else {
                     export = .failed
                     return

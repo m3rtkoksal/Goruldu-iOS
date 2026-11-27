@@ -8,6 +8,13 @@ struct Roast: Codable, Equatable, Identifiable, Sendable {
     var id: String { name }
 }
 
+/// Roast lines the results screen actually shows. Free shows the first line. Premium shows every line.
+enum ShownRoasts {
+    static func lines(_ roasts: [Roast], premium: Bool) -> [Roast] {
+        premium ? roasts : Array(roasts.prefix(1))
+    }
+}
+
 /// What is kept on the phone for a chat: the computed report and the roast, never the messages.
 struct SavedReport: Codable, Equatable, Identifiable, Sendable {
     var id: UUID

@@ -61,7 +61,8 @@ struct StoryView: View {
                 roasts: loadedRoasts,
                 premium: premium.isPremium,
                 viewerName: saved.viewer(),
-                highlights: saved.highlights
+                highlights: saved.highlights,
+                reading: saved.reading
             )
         }
     }

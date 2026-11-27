@@ -32,6 +32,21 @@ final class HighlightsTests: XCTestCase {
         XCTAssertEqual(minutes, minutes.sorted())
     }
 
+    func testReportBoardKeepsTheSamePeopleTheScreenShows() throws {
+        let report = try Fixture.report("lise-tayfa")
+        XCTAssertEqual(ReportBoard.talkers(report).map(\.name), report.participants.map(\.name))
+        XCTAssertEqual(ReportBoard.fastest(report).count, report.participants.count)
+        XCTAssertEqual(ReportBoard.night(report).count, report.participants.count)
+        XCTAssertEqual(ReportBoard.extraWords(report).map(\.word), report.topWords.dropFirst().map(\.word))
+        XCTAssertEqual(ReportBoard.awards(report, premium: false).count, report.awards.filter { !$0.premium }.count)
+        XCTAssertEqual(ReportBoard.awards(report, premium: true).count, report.awards.count)
+
+        var quiet = report
+        quiet.participants = Array(report.participants.prefix(1))
+        XCTAssertTrue(ReportBoard.fastest(quiet).isEmpty)
+        XCTAssertTrue(ReportBoard.night(quiet).isEmpty)
+    }
+
     func testTalkerIsTheMotorAndRankedFirst() throws {
         let report = try Fixture.report("lise-tayfa")
         XCTAssertEqual(PremiumFacts.role(of: report.talker.name, in: report), .motor)

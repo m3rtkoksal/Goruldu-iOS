@@ -2840,40 +2840,6 @@
         }
       }
     },
-    "share.cover.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chat report"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sohbet karnesi"
-          }
-        }
-      }
-    },
-    "share.cover.note" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ people · %2$@ active days"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ kişi · %2$@ aktif gün"
-          }
-        }
-      }
-    },
     "share.deck" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2942,23 +2908,6 @@
         }
       }
     },
-    "share.group" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · %2$@ Wrapped"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · %2$@ Karnesi"
-          }
-        }
-      }
-    },
     "share.hide.hint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3010,142 +2959,6 @@
         }
       }
     },
-    "share.premium.archetypes" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drama"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drama"
-          }
-        }
-      }
-    },
-    "share.premium.cast" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The cast"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kadro"
-          }
-        }
-      }
-    },
-    "share.premium.cliques" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sub-cliques"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alt klikler"
-          }
-        }
-      }
-    },
-    "share.premium.fastest" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fastest reply"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En hızlı cevap"
-          }
-        }
-      }
-    },
-    "share.premium.moments" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moments"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlar"
-          }
-        }
-      }
-    },
-    "share.premium.premiumGate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paid cards"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ücretli kartlar"
-          }
-        }
-      }
-    },
-    "share.premium.role" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your role"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Senin rolün"
-          }
-        }
-      }
-    },
-    "share.premium.vibe" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Group vibe"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grup havası"
-          }
-        }
-      }
-    },
     "share.save" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3176,23 +2989,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fotoğraflara kaydedildi."
-          }
-        }
-      }
-    },
-    "share.words.stat" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ times"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ kez"
           }
         }
       }

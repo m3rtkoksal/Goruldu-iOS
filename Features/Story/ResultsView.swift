@@ -21,10 +21,10 @@ struct ResultsView: View {
                 header
                 summary
                 talkers
-                if PremiumFacts.fastest(report).count >= 2 {
+                if !ReportBoard.fastest(report).isEmpty {
                     speed
                 }
-                if nightRank.count >= 2 {
+                if !ReportBoard.night(report).isEmpty {
                     night
                 }
                 if !report.topWords.isEmpty {
@@ -119,13 +119,13 @@ struct ResultsView: View {
     private var talkers: some View {
         race(
             title: L10n.tr("award.talker"),
-            people: Array(report.participants.prefix(8)),
+            people: ReportBoard.talkers(report),
             value: { Format.percent($0.sharePercent) }
         )
     }
 
     private var speed: some View {
-        let ranked = Array(PremiumFacts.fastest(report).prefix(8))
+        let ranked = ReportBoard.fastest(report)
         return VStack(alignment: .leading, spacing: 12) {
             race(
                 title: L10n.tr("fastest.eyebrow"),
@@ -151,19 +151,10 @@ struct ResultsView: View {
         }
     }
 
-    private var nightRank: [ChatReport.Participant] {
-        report.participants
-            .filter { $0.nightPercent > 0 }
-            .sorted { lhs, rhs in
-                if lhs.nightPercent != rhs.nightPercent { return lhs.nightPercent > rhs.nightPercent }
-                return lhs.name < rhs.name
-            }
-    }
-
     private var night: some View {
         race(
             title: L10n.tr("award.nightOwl"),
-            people: Array(nightRank.prefix(8)),
+            people: ReportBoard.night(report),
             value: { Format.percent($0.nightPercent) }
         )
     }
@@ -234,10 +225,13 @@ struct ResultsView: View {
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
+                Text(verbatim: Format.number(top.count))
+                    .font(.ui(16, .bold))
+                    .foregroundStyle(Palette.ink.opacity(0.7))
             }
             ScrollView(.horizontal) {
                 HStack(spacing: 8) {
-                    ForEach(Array(report.topWords.dropFirst().prefix(8).enumerated()), id: \.offset) { _, word in
+                    ForEach(Array(ReportBoard.extraWords(report).enumerated()), id: \.offset) { _, word in
                         Text(verbatim: "\(word.word)  \(Format.number(word.count))")
                             .font(.ui(14, .bold))
                             .foregroundStyle(Palette.ink)
@@ -255,7 +249,7 @@ struct ResultsView: View {
     }
 
     private var awards: some View {
-        let open = isPremium ? report.awards : report.awards.filter { !$0.premium }
+        let open = ReportBoard.awards(report, premium: isPremium)
         let locked = isPremium ? [] : report.awards.filter(\.premium)
         return VStack(alignment: .leading, spacing: 10) {
             Text(verbatim: L10n.tr("ceremony.eyebrow"))
@@ -323,7 +317,7 @@ struct ResultsView: View {
                         .font(.ui(15))
                         .foregroundStyle(Palette.ink.opacity(0.75))
                 } else {
-                    let open = isPremium ? roasts : Array(roasts.prefix(1))
+                    let open = ShownRoasts.lines(roasts, premium: isPremium)
                     ForEach(Array(open.enumerated()), id: \.offset) { _, roast in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(verbatim: roast.name).labelStyle(12).foregroundStyle(Palette.roseInk)
