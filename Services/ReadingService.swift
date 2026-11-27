@@ -38,7 +38,7 @@ struct ReadingService: Sendable {
         case badResponse
     }
 
-    static let edition = 1
+    static let edition = 2
     static let maxLines = 16
     static let maxText = 160
 
@@ -65,12 +65,14 @@ struct ReadingService: Sendable {
                     activeDays: saved.report.activeDays
                 ),
                 participants: people.map { person in
-                    Body.Person(
+                    let words = saved.highlights?.voices.first { $0.name == person.name }?.words ?? []
+                    return Body.Person(
                         name: String(person.name.prefix(RoastService.maxNameLength)),
                         messages: person.messages,
                         sharePercent: person.sharePercent,
                         avgReplyMinutes: person.avgReplyMinutes,
-                        nightPercent: person.nightPercent
+                        nightPercent: person.nightPercent,
+                        words: words.prefix(3).map { String($0.prefix(24)) }
                     )
                 },
                 lines: lines
@@ -187,6 +189,7 @@ struct ReadingService: Sendable {
             var sharePercent: Int
             var avgReplyMinutes: Int?
             var nightPercent: Int
+            var words: [String]
 
             func encode(to encoder: Encoder) throws {
                 var container = encoder.container(keyedBy: CodingKeys.self)
@@ -195,10 +198,11 @@ struct ReadingService: Sendable {
                 try container.encode(sharePercent, forKey: .sharePercent)
                 try container.encode(avgReplyMinutes, forKey: .avgReplyMinutes)
                 try container.encode(nightPercent, forKey: .nightPercent)
+                try container.encode(words, forKey: .words)
             }
 
             enum CodingKeys: String, CodingKey {
-                case name, messages, sharePercent, avgReplyMinutes, nightPercent
+                case name, messages, sharePercent, avgReplyMinutes, nightPercent, words
             }
         }
 
