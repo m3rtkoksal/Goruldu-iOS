@@ -171,7 +171,7 @@ struct ResultsView: View {
     private func race(
         title: String,
         people: [ChatReport.Participant],
-        value: (ChatReport.Participant) -> String
+        value: @escaping (ChatReport.Participant) -> String
     ) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(verbatim: title)
