@@ -50,7 +50,7 @@ struct CeremonyCard: View {
     }
 }
 
-private struct PrizeRow: View {
+struct PrizeRow: View {
     let kind: ChatReport.AwardKind
     let name: String
     let reason: String

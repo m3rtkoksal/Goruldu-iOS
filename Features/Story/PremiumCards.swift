@@ -5,7 +5,7 @@ struct PremiumGateCard: View {
     let unlock: () -> Void
 
     private static let rows = [
-        "premium.gate.role", "premium.gate.vibe", "premium.gate.cast", "premium.gate.fastest",
+        "premium.gate.role", "premium.gate.vibe", "premium.gate.cast",
         "premium.gate.moments", "premium.gate.archetypes", "premium.gate.cliques",
     ]
 

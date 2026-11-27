@@ -13,6 +13,14 @@ enum Palette {
     static let orange = Color(hex: 0xFF7A1A)
     static let violet = Color(hex: 0x7B3FF2)
     static let navy = Color(hex: 0x101A4D)
+    /// Soft fills for the stacked result cards. Poster colors stay on the share images.
+    static let cardMint = Color(hex: 0xC6F3DC)
+    static let cardBlush = Color(hex: 0xF6B7C8)
+    static let cardLilac = Color(hex: 0xD9CCF7)
+    static let cardPeach = Color(hex: 0xF8CBA8)
+    static let cardApricot = Color(hex: 0xF8D7B0)
+    static let roseInk = Color(hex: 0x7A1E3A)
+    static let clayInk = Color(hex: 0x6B3E16)
     static let tick = Color(hex: 0x34B7F1)
     static let switchOff = Color(hex: 0x3A3A47)
 }
