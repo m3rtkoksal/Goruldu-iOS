@@ -1,12 +1,77 @@
 import SwiftUI
 
 struct SlowReplierCard: View {
+    let report: ChatReport
     let slow: ChatReport.SlowReplier
     let number: String
     let theme: StoryTheme
     let compact: Bool
 
     var body: some View {
+        if ReportBoard.fastest(report).isEmpty {
+            poster
+        } else {
+            race
+        }
+    }
+
+    /// Reply times, fastest first. The last strip is the slowest person.
+    private var race: some View {
+        let ranked = ReportBoard.fastest(report)
+        return VStack(alignment: .leading, spacing: 0) {
+            Eyebrow(text: L10n.tr("fastest.eyebrow"))
+            if let first = ranked.first {
+                WinnerName(name: first.name, size: compact ? 64 : 84)
+                    .padding(.top, 12)
+                Text(verbatim: first.avgReplyMinutes.map(Format.duration(minutes:)) ?? "")
+                    .displayStyle(40, tracking: -0.045)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .padding(.top, 6)
+            }
+            VStack(spacing: 8) {
+                ForEach(Array(ranked.dropFirst().enumerated()), id: \.offset) { offset, person in
+                    HStack(spacing: 8) {
+                        Text(verbatim: "#\(offset + 2)")
+                            .font(.ui(14, .bold))
+                            .frame(width: 28, alignment: .leading)
+                        Text(verbatim: person.name)
+                            .font(.ui(15, .bold))
+                            .lineLimit(1)
+                        Spacer(minLength: 8)
+                        Text(verbatim: person.avgReplyMinutes.map(Format.duration(minutes:)) ?? "")
+                            .font(.ui(15, .bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                    }
+                    .padding(.horizontal, 12)
+                    .frame(height: compact ? 32 : 36)
+                    .background(theme.foreground.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+            }
+            .padding(.top, 16)
+            Spacer(minLength: 12)
+            HStack(spacing: 8) {
+                Text(verbatim: L10n.tr("award.slowReplier"))
+                    .font(.ui(14, .bold))
+                Spacer(minLength: 8)
+                Text(verbatim: slow.name)
+                    .font(.ui(15, .bold))
+                    .lineLimit(1)
+                Text(verbatim: Format.duration(minutes: slow.avgReplyMinutes))
+                    .font(.ui(15, .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 44)
+            .background(theme.accent, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .foregroundStyle(theme.onAccent)
+        }
+        .foregroundStyle(theme.foreground)
+    }
+
+    private var poster: some View {
         VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.slowReplier")))
             WinnerName(name: slow.name, size: compact ? 76 : 100)

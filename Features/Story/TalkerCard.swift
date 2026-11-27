@@ -8,7 +8,7 @@ struct TalkerCard: View {
 
     var body: some View {
         let talker = report.talker
-        let rows = Array(report.participants.prefix(compact ? 5 : 8))
+        let rows = ReportBoard.talkers(report)
         VStack(alignment: .leading, spacing: 0) {
             Eyebrow(text: L10n.tr("story.award", number, L10n.tr("award.talker")))
             WinnerName(name: talker.name, size: compact ? 76 : 100)
@@ -31,14 +31,14 @@ struct TalkerCard: View {
             Spacer(minLength: 16)
             VStack(spacing: 10) {
                 ForEach(Array(rows.enumerated()), id: \.offset) { position, person in
-                    row(person, position: position, isTop: position == 0, top: max(1, talker.messages))
+                    row(person, position: position, isTop: position == 0, top: max(1, talker.messages), bar: rows.count > 6 ? 16 : 22)
                 }
             }
         }
         .foregroundStyle(theme.foreground)
     }
 
-    private func row(_ person: ChatReport.Participant, position: Int, isTop: Bool, top: Int) -> some View {
+    private func row(_ person: ChatReport.Participant, position: Int, isTop: Bool, top: Int, bar: CGFloat) -> some View {
         HStack(spacing: 10) {
             Text(verbatim: "#\(position + 1)")
                 .font(.ui(13, .bold))
@@ -55,7 +55,7 @@ struct TalkerCard: View {
                         .frame(width: max(8, proxy.size.width * CGFloat(person.messages) / CGFloat(top)))
                 }
             }
-            .frame(height: 24)
+            .frame(height: bar)
             Text(verbatim: Format.percent(person.sharePercent))
                 .font(.ui(16, isTop ? .bold : .semibold))
                 .monospacedDigit()

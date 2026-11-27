@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The report as one scrolling stack of cards.
+/// The report as swipeable story pages. Each card has its own color.
 struct StoryView: View {
     @Environment(AppModel.self) private var model
     @Environment(ReportStore.self) private var reports
@@ -8,11 +8,14 @@ struct StoryView: View {
 
     let reportID: UUID
 
+    @State private var index = 0
+    @State private var forward = true
     @State private var roastState: RoastState = .loading
     @State private var roastAttempt = 0
     @State private var roastTask: Task<Void, Never>?
     @State private var showsPaywall = false
     @State private var sharedCard: StoryCard?
+    @State private var lastTurn = Date.distantPast
 
     private var roastKey: String { "\(reportID.uuidString)-\(roastAttempt)-\(L10n.apiLocale)" }
 
@@ -32,21 +35,60 @@ struct StoryView: View {
 
     private func pages(for saved: SavedReport) -> some View {
         let report = saved.report
-        return ResultsView(
-            report: report,
-            viewer: saved.viewer(),
-            highlights: saved.highlights,
-            reading: saved.reading,
-            isPremium: premium.isPremium,
-            roastState: roastState,
-            unlock: { showsPaywall = true },
-            retryRoast: {
-                roastState = .loading
-                roastAttempt += 1
-            },
-            close: { model.showHome() },
-            share: { sharedCard = StoryCard.cards(for: report, premium: premium.isPremium).last }
-        )
+        let cards = StoryCard.cards(for: report, premium: premium.isPremium)
+        let safeIndex = min(index, max(cards.count - 1, 0))
+        let card = cards[safeIndex]
+        let theme = StoryTheme.theme(for: card)
+        return GeometryReader { proxy in
+            let compact = proxy.size.height < 760
+            VStack(spacing: 0) {
+                chrome(report: report, cards: cards, theme: theme, index: safeIndex)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                ZStack {
+                    HStack(spacing: 0) {
+                        Color.clear
+                            .contentShape(Rectangle())
+                            .onTapGesture { turn(-1, count: cards.count) }
+                        Color.clear
+                            .contentShape(Rectangle())
+                            .onTapGesture { turn(1, count: cards.count) }
+                    }
+                    content(card, report: report, cards: cards, theme: theme, compact: compact)
+                        .id(card)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: forward ? .trailing : .leading).combined(with: .opacity),
+                            removal: .move(edge: forward ? .leading : .trailing).combined(with: .opacity)
+                        ))
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, compact ? 8 : 18)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                footer(card: card, count: cards.count, theme: theme, index: safeIndex)
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 36, coordinateSpace: .local).onEnded { value in
+                    guard abs(value.translation.width) > abs(value.translation.height) else { return }
+                    turn(value.translation.width < 0 ? 1 : -1, count: cards.count)
+                }
+            )
+        }
+        .background(theme.background.ignoresSafeArea())
+        .animation(.easeOut(duration: 0.22), value: safeIndex)
+        .onChange(of: premium.isPremium) { _, unlocked in
+            guard unlocked else { return }
+            let next = StoryCard.cards(for: report, premium: true)
+            if let role = next.firstIndex(of: .role) { index = role }
+        }
+        .statusBarHidden(true)
+        .accessibilityAction(named: Text(verbatim: L10n.tr("story.next"))) {
+            turn(1, count: cards.count)
+        }
+        .accessibilityAction(named: Text(verbatim: L10n.tr("story.previous"))) {
+            turn(-1, count: cards.count)
+        }
         .task(id: "\(premium.isPremium)-\(L10n.apiLocale)") {
             guard premium.isPremium else { return }
             await loadReading(for: saved)
@@ -64,6 +106,143 @@ struct StoryView: View {
                 highlights: saved.highlights,
                 reading: saved.reading
             )
+        }
+    }
+
+    private func turn(_ delta: Int, count: Int) {
+        let now = Date()
+        guard now.timeIntervalSince(lastTurn) > 0.28 else { return }
+        let current = min(index, max(count - 1, 0))
+        let next = current + delta
+        guard (0..<count).contains(next) else { return }
+        lastTurn = now
+        forward = delta > 0
+        index = next
+    }
+
+    private func chrome(report: ChatReport, cards: [StoryCard], theme: StoryTheme, index: Int) -> some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 4) {
+                ForEach(cards.indices, id: \.self) { position in
+                    Capsule()
+                        .fill(theme.foreground.opacity(position <= index ? 1 : 0.28))
+                        .frame(height: 3)
+                }
+            }
+            .accessibilityHidden(true)
+            HStack(spacing: 10) {
+                Text(verbatim: Format.initials(report.title))
+                    .font(.ui(12, .bold))
+                    .foregroundStyle(theme.onAccent)
+                    .frame(width: 34, height: 34)
+                    .background(theme.accent, in: Circle())
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(verbatim: report.title)
+                        .font(.ui(14, .bold))
+                        .lineLimit(1)
+                    Text(verbatim: L10n.tr("story.yearReport", report.year))
+                        .font(.ui(12))
+                        .opacity(0.72)
+                        .lineLimit(1)
+                }
+                .foregroundStyle(theme.foreground)
+                Spacer(minLength: 8)
+                Button {
+                    model.showHome()
+                } label: {
+                    Image(systemName: Symbol.close)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(theme.foreground)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(verbatim: L10n.tr("story.close")))
+            }
+        }
+    }
+
+    private func footer(card: StoryCard, count: Int, theme: StoryTheme, index: Int) -> some View {
+        HStack {
+            Button {
+                sharedCard = card
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: Symbol.upload).font(.system(size: 14, weight: .bold))
+                    Text(verbatim: L10n.tr("story.share"))
+                        .font(.ui(15, .bold))
+                }
+                .foregroundStyle(theme.onAccent)
+                .padding(.horizontal, 18)
+                .frame(height: 44)
+                .background(theme.accent, in: Capsule())
+            }
+            .buttonStyle(.plain)
+            Spacer()
+            Text(verbatim: "\(index + 1) / \(count)")
+                .font(.ui(13, .bold))
+                .monospacedDigit()
+                .foregroundStyle(theme.foreground.opacity(0.7))
+                .accessibilityLabel(Text(verbatim: L10n.tr("story.page", String(index + 1), String(count))))
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+    }
+
+    @ViewBuilder
+    private func content(_ card: StoryCard, report: ChatReport, cards: [StoryCard], theme: StoryTheme, compact: Bool) -> some View {
+        let number = StoryCard.awardNumber(of: card, in: cards)
+        let viewer = reports.report(id: reportID)?.viewer() ?? report.talker.name
+        let highlights = reports.report(id: reportID)?.highlights
+        let reading = reports.report(id: reportID)?.reading
+        switch card {
+        case .cover:
+            CoverCard(report: report, theme: theme, compact: compact)
+        case .talker:
+            TalkerCard(report: report, number: number, theme: theme, compact: compact)
+        case .slowReplier:
+            if let slow = report.slowReplier {
+                SlowReplierCard(report: report, slow: slow, number: number, theme: theme, compact: compact)
+            }
+        case .nightOwl:
+            if let owl = report.nightOwl {
+                NightOwlCard(report: report, owl: owl, number: number, theme: theme, compact: compact)
+            }
+        case .words:
+            WordsCard(words: report.topWords, theme: theme, compact: compact)
+        case .ceremony:
+            CeremonyCard(awards: report.awards, isPremium: premium.isPremium, theme: theme) {
+                showsPaywall = true
+            }
+        case .roast:
+            RoastCard(
+                state: roastState,
+                isPremium: premium.isPremium,
+                theme: theme,
+                unlock: { showsPaywall = true },
+                retry: {
+                    roastState = .loading
+                    roastAttempt += 1
+                }
+            )
+        case .premiumGate:
+            PremiumGateCard(theme: theme) { showsPaywall = true }
+        case .role:
+            RoleCard(report: report, viewer: viewer, highlights: highlights, reading: reading, theme: theme)
+        case .vibe:
+            VibeCard(report: report, highlights: highlights, reading: reading, theme: theme)
+        case .cast:
+            CastCard(report: report, viewer: viewer, highlights: highlights, reading: reading, theme: theme)
+        case .fastest:
+            FastestCard(report: report, theme: theme)
+        case .moments:
+            MomentsCard(report: report, highlights: highlights, reading: reading, theme: theme)
+        case .archetypes:
+            ArchetypeCard(highlights: highlights, reading: reading, theme: theme)
+        case .cliques:
+            CliquesCard(pairs: highlights?.pairs ?? [], reading: reading, theme: theme)
         }
     }
 
@@ -100,7 +279,6 @@ struct StoryView: View {
                 updated.roasts = roasts
                 updated.roastEdition = edition
                 updated.roastLocale = locale
-                // A failed write only means the roast is asked for again next time.
                 try? reports.save(updated)
             } catch is CancellationError {
                 return
