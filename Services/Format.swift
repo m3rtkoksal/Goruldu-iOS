@@ -2,8 +2,8 @@ import Foundation
 
 /// Number, duration and name formatting shared by the screens and the share card.
 enum Format {
-    static func number(_ value: Int, locale: Locale = .current) -> String {
-        value.formatted(.number.grouping(.automatic).locale(locale))
+    static func number(_ value: Int, locale: Locale? = nil) -> String {
+        value.formatted(.number.grouping(.automatic).locale(locale ?? LanguageStore.shared.locale))
     }
 
     /// "%38" in Turkish, "38%" in English.
@@ -28,7 +28,7 @@ enum Format {
         return (total / 1_440, (total % 1_440) / 60, total % 60)
     }
 
-    /// "2024-02-14" becomes a short date in the phone language.
+    /// "2024-02-14" becomes a short date in the language chosen in Settings.
     static func day(_ iso: String) -> String {
         let parts = iso.split(separator: "-")
         guard parts.count == 3, let year = Int(parts[0]), let month = Int(parts[1]), let day = Int(parts[2]) else {
@@ -39,7 +39,7 @@ enum Format {
         components.month = month
         components.day = day
         guard let date = Calendar(identifier: .gregorian).date(from: components) else { return iso }
-        return date.formatted(.dateTime.day().month(.abbreviated).locale(Locale.current))
+        return date.formatted(.dateTime.day().month(.abbreviated).locale(LanguageStore.shared.locale))
     }
 
     static func clock(hour: Int, minute: Int = 0) -> String {
@@ -49,12 +49,14 @@ enum Format {
     /// "Burak" becomes "B." when names are hidden on a shared card.
     static func masked(_ name: String) -> String {
         guard let first = name.trimmingCharacters(in: .whitespaces).first else { return "?" }
-        return "\(String(first).uppercased())."
+        return "\(String(first).uppercased(with: LanguageStore.shared.locale))."
     }
 
     /// "Lise Tayfa" becomes "LT".
     static func initials(_ title: String) -> String {
-        let letters = title.split(separator: " ").prefix(2).compactMap(\.first).map { String($0).uppercased() }
+        let letters = title.split(separator: " ").prefix(2).compactMap(\.first).map {
+            String($0).uppercased(with: LanguageStore.shared.locale)
+        }
         return letters.isEmpty ? "?" : letters.joined()
     }
 }

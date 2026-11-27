@@ -10,6 +10,8 @@ struct GorulduApp: App {
                 .environment(model)
                 .environment(model.reports)
                 .environment(model.premium)
+                .environment(LanguageStore.shared)
+                .environment(\.locale, LanguageStore.shared.locale)
                 .onOpenURL { url in model.open(url) }
         }
     }

@@ -14,8 +14,18 @@ struct SettingsSheet: View {
 
     var body: some View {
         @Bindable var premium = premium
+        @Bindable var language = LanguageStore.shared
         NavigationStack {
             List {
+                Section {
+                    Picker(selection: $language.choice) {
+                        Text(verbatim: L10n.tr("settings.language.system")).tag(LanguageStore.Choice.system)
+                        Text(verbatim: "Türkçe").tag(LanguageStore.Choice.turkish)
+                        Text(verbatim: "English").tag(LanguageStore.Choice.english)
+                    } label: {
+                        Text(verbatim: L10n.tr("settings.language"))
+                    }
+                }
                 Section {
                     HStack {
                         Text(verbatim: L10n.tr("settings.plan"))

@@ -38,8 +38,8 @@ struct StoryView: View {
             close: { model.showHome() },
             share: { sharedCard = StoryCard.cards(for: report, premium: premium.isPremium).last }
         )
-        .task(id: roastAttempt) { await loadRoast(for: saved) }
-        .task(id: premium.isPremium) {
+        .task(id: "\(roastAttempt)-\(L10n.apiLocale)") { await loadRoast(for: saved) }
+        .task(id: "\(premium.isPremium)-\(L10n.apiLocale)") {
             guard premium.isPremium else { return }
             await loadReading(for: saved)
         }
@@ -68,7 +68,8 @@ struct StoryView: View {
 
     /// The roast is asked for once and then kept with the report.
     private func loadRoast(for saved: SavedReport) async {
-        if let cached = saved.roasts, !cached.isEmpty, saved.roastEdition == Self.roastEdition {
+        if let cached = saved.roasts, !cached.isEmpty,
+           saved.roastEdition == Self.roastEdition, saved.roastLocale == L10n.apiLocale {
             roastState = .loaded(cached)
             return
         }
@@ -79,6 +80,7 @@ struct StoryView: View {
             var updated = saved
             updated.roasts = roasts
             updated.roastEdition = Self.roastEdition
+            updated.roastLocale = L10n.apiLocale
             // A failed write only means the roast is asked for again next time.
             try? reports.save(updated)
         } catch is CancellationError {
@@ -92,7 +94,8 @@ struct StoryView: View {
 
     /// Asked once the subscription is on. The lines were already chosen; the model only names them.
     private func loadReading(for saved: SavedReport) async {
-        if let cached = saved.reading, saved.readingEdition == ReadingService.edition, !cached.vibeTitle.isEmpty {
+        if let cached = saved.reading, saved.readingEdition == ReadingService.edition,
+           saved.readingLocale == L10n.apiLocale, !cached.vibeTitle.isEmpty {
             return
         }
         do {
@@ -100,6 +103,7 @@ struct StoryView: View {
             var updated = reports.report(id: saved.id) ?? saved
             updated.reading = reading
             updated.readingEdition = ReadingService.edition
+            updated.readingLocale = L10n.apiLocale
             try? reports.save(updated)
         } catch is CancellationError {
             return
