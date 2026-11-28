@@ -28,9 +28,16 @@ struct StoryView: View {
             }
         }
         .onChange(of: roastKey, initial: true) { _, _ in
+            roastTask?.cancel()
+            roastTask = nil
             startRoastLoad()
         }
-        .onDisappear { roastTask?.cancel() }
+        .onAppear {
+            // A story transition can cancel the first request and never ask again.
+            if roastTask == nil || roastTask?.isCancelled == true {
+                startRoastLoad()
+            }
+        }
     }
 
     private func pages(for saved: SavedReport) -> some View {
@@ -77,6 +84,7 @@ struct StoryView: View {
         }
         .background(theme.background.ignoresSafeArea())
         .animation(.easeOut(duration: 0.22), value: safeIndex)
+        .onAppear { startRoastLoad() }
         .onChange(of: premium.isPremium) { _, unlocked in
             guard unlocked else { return }
             let next = StoryCard.cards(for: report, premium: true)
@@ -255,9 +263,9 @@ struct StoryView: View {
     }
 
     /// The roast is asked for once and then kept with the report.
-    /// A SwiftUI `.task` was cancelled whenever the screen refreshed, and the spinner never left.
+    /// Leaving the screen used to cancel that request and leave the spinner up.
     private func startRoastLoad() {
-        roastTask?.cancel()
+        if let roastTask, !roastTask.isCancelled { return }
         guard let saved = reports.report(id: reportID) else { return }
         let locale = L10n.apiLocale
         let cached = saved.roasts ?? []
